@@ -1,0 +1,23 @@
+{
+  "Header": {
+    "search": "Cari",
+    "wishlist": "Daftar Keinginan",
+    "language": "Bahasa",
+    "menu": "Menu"
+  },
+  "Navigation": {
+    "products": "Produk",
+    "brands": "Merek",
+    "collections": "Koleksi",
+    "services": "Layanan",
+    "articles": "Artikel",
+    "faq": "FAQ",
+    "stores": "Lokasi Toko",
+    "contact": "Kontak"
+  },
+  "Common": {
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan.",
+    "buyNow": "Beli di"
+  }
+}

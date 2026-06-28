@@ -1,0 +1,23 @@
+{
+  "Header": {
+    "search": "Search",
+    "wishlist": "Wishlist",
+    "language": "Language",
+    "menu": "Menu"
+  },
+  "Navigation": {
+    "products": "Products",
+    "brands": "Brands",
+    "collections": "Collections",
+    "services": "Services",
+    "articles": "Articles",
+    "faq": "FAQ",
+    "stores": "Store Locator",
+    "contact": "Contact"
+  },
+  "Common": {
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "buyNow": "Buy on"
+  }
+}

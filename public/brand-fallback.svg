@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" fill="none">
+  <rect width="800" height="1000" fill="#F5F5F5"/>
+  
+  <!-- Subtle Grid Lines -->
+  <path d="M400 0v1000M0 500h800" stroke="#E5E5E5" stroke-width="1" />
+  
+  <!-- Minimalist Monogram / Symbol -->
+  <g transform="translate(400, 500)" opacity="0.3">
+    <!-- Two circles representing eyes / lenses -->
+    <circle cx="-60" cy="0" r="40" stroke="#111111" stroke-width="3" fill="none"/>
+    <circle cx="60" cy="0" r="40" stroke="#111111" stroke-width="3" fill="none"/>
+    <!-- Bridge -->
+    <path d="M-20 0 Q 0 -15 20 0" stroke="#111111" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </g>
+  
+  <text x="400" y="580" font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="12" font-weight="500" fill="#666666" text-anchor="middle" letter-spacing="4">
+    EYESOUL
+  </text>
+</svg>
