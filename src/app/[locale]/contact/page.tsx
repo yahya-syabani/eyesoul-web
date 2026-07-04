@@ -1,13 +1,17 @@
 import { getSiteSettings } from "@/lib/cms/settings";
 import { Locale } from "@/lib/cms/types";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { MapPin, Mail, Phone, Clock, MessageSquare, ArrowRight } from "lucide-react";
+import { MapPin, Mail, MessageSquare, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/routing";
+import { getTranslations } from 'next-intl/server';
+import { PageHero } from "@/components/ui/PageHero";
 
-export const metadata = {
-  title: "Contact Us - Eyesoul Premium Eyewear",
-  description: "Get in touch with the Eyesoul team for support, consultations, or general inquiries.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.contact' });
+  return { title: t('meta.title'), description: t('meta.description') };
+}
 
 export default async function ContactPage({
   params,
@@ -15,23 +19,29 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.contact' });
   const settings = await getSiteSettings(locale as Locale);
   
   const whatsappNumber = settings?.whatsapp || "6281234567890";
-  const supportEmail = "hello@eyesoul.com";
-  const phone = "+1 (234) 567-890";
+  const supportEmail = settings?.contactEmail || "hello@eyesoul.com";
+  const phone = settings?.phone || "+1 (234) 567-890";
 
   return (
     <main className="flex-grow bg-background">
-      <div className="container mx-auto px-4 py-24 md:py-32">
+      <PageHero
+        title={t('hero.title')}
+        subtitle={t('hero.subtitle')}
+        imageUrl="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=2940&auto=format&fit=crop"
+        imageAlt="Modern welcoming boutique reception"
+        height="standard"
+        overlayOpacity={0.3}
+      />
+      <div className="container mx-auto px-4 py-16 md:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 max-w-6xl mx-auto">
           
           {/* Left Column: Information */}
           <div>
             <RevealOnScroll>
-              <h1 className="font-display text-4xl md:text-5xl font-light mb-6 tracking-tight">
-                Get in touch.
-              </h1>
               <p className="text-muted-foreground text-lg mb-12 max-w-md leading-relaxed">
                 Whether you have a question about our collections, need help with an order, or want to book an eye examination, our concierge team is here to assist you.
               </p>
@@ -75,10 +85,10 @@ export default async function ContactPage({
                   </div>
                   <div>
                     <h3 className="font-display text-lg font-medium mb-1">Flagship Store</h3>
-                    <p className="text-muted-foreground text-sm mb-2">123 Optical Avenue, Design District, NY 10012</p>
-                    <a href="/store-locator" className="text-sm font-medium hover:text-primary transition-colors flex items-center">
+                    <p className="text-muted-foreground text-sm mb-2">{settings?.address || "Visit our store locator for addresses"}</p>
+                    <Link href="/store-locator" className="text-sm font-medium hover:text-primary transition-colors flex items-center">
                       Get Directions <ArrowRight className="w-3 h-3 ml-1" />
-                    </a>
+                    </Link>
                   </div>
                 </div>
 
@@ -147,7 +157,7 @@ export default async function ContactPage({
                     ></textarea>
                   </div>
 
-                  <Button type="button" className="w-full h-12 text-sm uppercase tracking-widest mt-4">
+                  <Button type="submit" className="w-full h-12 text-sm uppercase tracking-widest mt-4">
                     Send Inquiry
                   </Button>
                 </form>

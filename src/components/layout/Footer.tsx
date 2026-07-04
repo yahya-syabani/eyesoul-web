@@ -2,9 +2,10 @@
 
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { MapPin, Mail, Phone, ArrowRight } from 'lucide-react';
+import { MapPin, Mail, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { SiteSettings } from '@/lib/cms/types';
+import { NewsletterForm } from '@/components/ui/NewsletterForm';
 
 interface FooterProps {
   siteSettings?: SiteSettings | null;
@@ -12,6 +13,7 @@ interface FooterProps {
 
 export function Footer({ siteSettings }: FooterProps) {
   const t = useTranslations('Navigation');
+  const f = useTranslations('footer');
   const currentYear = new Date().getFullYear();
 
   return (
@@ -21,22 +23,12 @@ export function Footer({ siteSettings }: FooterProps) {
         {/* Newsletter Section */}
         <div className="flex flex-col md:flex-row items-center justify-between border-b border-white/10 pb-16 mb-16">
           <div className="max-w-xl mb-8 md:mb-0">
-            <h3 className="font-display text-3xl md:text-5xl mb-4 font-light">Join the list.</h3>
+            <h3 className="font-display text-3xl md:text-5xl mb-4 font-light">{f('newsletter.title')}</h3>
             <p className="text-neutral-400 text-sm">
-              Subscribe to receive updates on new arrivals, exclusive releases, and early access to collaborations.
+              {f('newsletter.body')}
             </p>
           </div>
-          <form className="w-full md:max-w-md flex relative" onSubmit={(e) => e.preventDefault()}>
-            <input 
-              type="email" 
-              placeholder="Email Address" 
-              className="w-full bg-transparent border-0 border-b border-white/30 rounded-none px-0 py-4 text-white placeholder:text-neutral-500 focus:outline-none focus:ring-0 focus:border-white transition-colors"
-              required
-            />
-            <Button type="submit" variant="ghost" size="icon" className="absolute right-0 top-1 hover:bg-transparent hover:text-neutral-300">
-              <ArrowRight className="h-5 w-5" />
-            </Button>
-          </form>
+          <NewsletterForm />
         </div>
 
         {/* Main Footer Links */}
@@ -77,20 +69,20 @@ export function Footer({ siteSettings }: FooterProps) {
 
           {/* Shop Column */}
           <div className="flex flex-col space-y-4">
-            <h4 className="font-display font-medium text-xs tracking-[0.2em] uppercase text-white mb-4">Shop</h4>
+            <h4 className="font-display font-medium text-xs tracking-[0.2em] uppercase text-white mb-4">{f('shop')}</h4>
             <nav className="flex flex-col space-y-3 text-sm text-neutral-400">
-              <Link href="/products?category=frames" className="hover:text-white transition-colors">Optical Frames</Link>
-              <Link href="/products?category=sunglasses" className="hover:text-white transition-colors">Sunglasses</Link>
+              <Link href="/products?category=frames" className="hover:text-white transition-colors">{f('links.optical')}</Link>
+              <Link href="/products?category=sunglasses" className="hover:text-white transition-colors">{f('links.sunglasses')}</Link>
               <Link href="/collections" className="hover:text-white transition-colors">All {t('collections')}</Link>
             </nav>
           </div>
 
           {/* Support Column */}
           <div className="flex flex-col space-y-4">
-            <h4 className="font-display font-medium text-xs tracking-[0.2em] uppercase text-white mb-4">Support</h4>
+            <h4 className="font-display font-medium text-xs tracking-[0.2em] uppercase text-white mb-4">{f('support')}</h4>
             <nav className="flex flex-col space-y-3 text-sm text-neutral-400">
               <Link href="/faq" className="hover:text-white transition-colors">{t('faq')}</Link>
-              <Link href="/services/repairs" className="hover:text-white transition-colors">Repairs & Warranty</Link>
+              <Link href="/services/repairs" className="hover:text-white transition-colors">{f('links.repairs')}</Link>
               <Link href="/contact" className="hover:text-white transition-colors">{t('contact')}</Link>
               <Link href="/store-locator" className="hover:text-white transition-colors">{t('stores')}</Link>
             </nav>
@@ -98,7 +90,7 @@ export function Footer({ siteSettings }: FooterProps) {
 
           {/* Contact Column */}
           <div className="flex flex-col space-y-4">
-            <h4 className="font-display font-medium text-xs tracking-[0.2em] uppercase text-white mb-4">Contact</h4>
+            <h4 className="font-display font-medium text-xs tracking-[0.2em] uppercase text-white mb-4">{f('contact')}</h4>
             <div className="flex flex-col space-y-4 text-sm text-neutral-400">
               <div className="flex items-start space-x-3 group">
                 <MapPin className="h-4 w-4 mt-0.5 shrink-0 group-hover:text-white transition-colors" />
@@ -126,14 +118,14 @@ export function Footer({ siteSettings }: FooterProps) {
           
           <div className="flex space-x-4 my-4 md:my-0 text-neutral-600 font-display tracking-widest uppercase">
             {/* Trust Markers - Simple Typography */}
-            <span>Zeiss Partner</span>
+            <span>{f('trust.zeiss')}</span>
             <span>&bull;</span>
-            <span>Secure Checkout</span>
+            <span>{f('trust.checkout')}</span>
           </div>
 
           <div className="flex space-x-6">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">{f('links.privacy')}</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">{f('links.terms')}</Link>
           </div>
         </div>
       </div>

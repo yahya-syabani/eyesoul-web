@@ -2,7 +2,6 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Brand, EyewearCollection } from '@/lib/cms/types';
 import { Category } from '@/lib/cms/categories';
@@ -18,8 +17,35 @@ interface MegaMenuProps {
   categories?: Category[];
 }
 
-export function MegaMenu({ activeTab, onMouseEnter, onMouseLeave, brands = [], collections = [], categories = [] }: MegaMenuProps) {
-  const t = useTranslations("Navigation");
+const containerVariants = {
+  hidden: { opacity: 0, y: -5, filter: "blur(4px)" },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    filter: "blur(0px)",
+    transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } 
+  },
+  exit: { opacity: 0, y: -5, filter: "blur(4px)", transition: { duration: 0.2 } }
+};
+
+const contentVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } }
+};
+
+export function MegaMenu({ activeTab, onMouseEnter, onMouseLeave, brands = [], collections = [] }: MegaMenuProps) {
+
 
   const tabContents = {
     eyewear: {
@@ -98,7 +124,7 @@ export function MegaMenu({ activeTab, onMouseEnter, onMouseLeave, brands = [], c
         }
       ],
       campaign: {
-        image: "/campaign-fallback.svg", // Brands don't have a cover image in the schema, using fallback
+        image: "/campaign-fallback.svg",
         title: brands[0]?.name || "Featured Brand",
         subtitle: "Partner",
         link: brands[0] ? `/brands/${brands[0].slug}` : "/brands",
@@ -111,61 +137,73 @@ export function MegaMenu({ activeTab, onMouseEnter, onMouseLeave, brands = [], c
 
   return (
     <AnimatePresence>
-      {activeTab && content && (
+      {activeTab && (
         <motion.div
-          initial={{ opacity: 0, y: -5, filter: "blur(4px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, y: -5, filter: "blur(4px)" }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} // custom spring-like ease
+          layout
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           onMouseEnter={() => onMouseEnter(activeTab)}
           onMouseLeave={onMouseLeave}
-          className="absolute top-full left-0 w-full bg-background/95 backdrop-blur-2xl border-b border-border shadow-sm z-40 hidden md:block"
+          className="absolute top-full left-0 w-full bg-background/95 backdrop-blur-2xl border-b border-border shadow-sm z-40 hidden md:block overflow-hidden"
         >
-          <div className="container mx-auto px-4 py-12">
-            <div className="grid grid-cols-12 gap-8">
-              
-              {/* Links Sections (8 cols) */}
-              <div className="col-span-8 grid grid-cols-3 gap-8">
-                {content.columns.map((col, idx) => (
-                  <div key={idx} className="flex flex-col space-y-4">
-                    <h4 className="font-display text-xs tracking-widest uppercase text-muted-foreground mb-3">{col.title}</h4>
-                    {col.links.map((link, linkIdx) => (
-                      <Link 
-                        key={linkIdx} 
-                        href={link.href} 
-                        onClick={onMouseLeave}
-                        className={`hover:text-primary transition-colors ${'highlight' in link && link.highlight ? "text-sm font-medium mt-2 pt-4 border-t border-border/50 inline-block w-max" : "text-[15px]"}`}
-                      >
-                        {link.label} {'highlight' in link && link.highlight && <span className="ml-1">&rarr;</span>}
-                      </Link>
+          <AnimatePresence mode="wait">
+            {content && (
+              <motion.div
+                key={activeTab}
+                variants={contentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                className="container mx-auto px-4 py-12"
+              >
+                <div className="grid grid-cols-12 gap-8">
+                  
+                  {/* Links Sections (8 cols) */}
+                  <div className="col-span-8 grid grid-cols-3 gap-8">
+                    {content.columns.map((col, idx) => (
+                      <motion.div variants={itemVariants} key={idx} className="flex flex-col space-y-4">
+                        <h4 className="font-sans text-xs font-medium tracking-wide uppercase text-muted-foreground mb-3">{col.title}</h4>
+                        {col.links.map((link, linkIdx) => (
+                          <Link 
+                            key={linkIdx} 
+                            href={link.href} 
+                            onClick={onMouseLeave}
+                            className={`hover:text-primary transition-colors ${'highlight' in link && link.highlight ? "text-sm font-medium mt-2 pt-4 border-t border-border/50 inline-block w-max" : "text-sm text-foreground/80"}`}
+                          >
+                            {link.label} {'highlight' in link && link.highlight && <span className="ml-1">&rarr;</span>}
+                          </Link>
+                        ))}
+                      </motion.div>
                     ))}
                   </div>
-                ))}
-              </div>
 
-              {/* Featured Campaign (4 cols) */}
-              <div className="col-span-4 pl-8 border-l border-border/50">
-                <div className="flex flex-col">
-                  <div className="aspect-[16/9] bg-neutral-100 relative overflow-hidden group rounded-sm mb-6">
-                    <Image
-                      src={content.campaign.image}
-                      alt={content.campaign.title}
-                      fill
-                      sizes="33vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-1000 ease-[0.25,0.25,0,1]"
-                    />
-                    <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-500"></div>
-                  </div>
-                  <h5 className="text-xs uppercase tracking-widest text-muted-foreground mb-1">{content.campaign.subtitle}</h5>
-                  <h4 className="font-display text-xl mb-3">{content.campaign.title}</h4>
-                  <Link href={content.campaign.link} onClick={onMouseLeave} className="text-sm font-medium hover:text-primary transition-colors inline-block w-max">
-                    {content.campaign.linkText} <span className="ml-1">&rarr;</span>
-                  </Link>
+                  {/* Featured Campaign (4 cols) */}
+                  <motion.div variants={itemVariants} className="col-span-4 pl-8 border-l border-border/50">
+                    <div className="flex flex-col">
+                      <div className="aspect-[16/9] bg-neutral-100 relative overflow-hidden group rounded-sm mb-6">
+                        <Image
+                          src={content.campaign.image}
+                          alt={content.campaign.title}
+                          fill
+                          sizes="33vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-1000 ease-[0.25,0.25,0,1]"
+                        />
+                        <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors duration-500"></div>
+                      </div>
+                      <h5 className="text-xs uppercase tracking-widest text-muted-foreground mb-1">{content.campaign.subtitle}</h5>
+                      <h4 className="font-display text-xl mb-3">{content.campaign.title}</h4>
+                      <Link href={content.campaign.link} onClick={onMouseLeave} className="text-sm font-medium hover:text-primary transition-colors inline-block w-max">
+                        {content.campaign.linkText} <span className="ml-1">&rarr;</span>
+                      </Link>
+                    </div>
+                  </motion.div>
+                  
                 </div>
-              </div>
-              
-            </div>
-          </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       )}
     </AnimatePresence>

@@ -19,5 +19,182 @@
     "loading": "Loading...",
     "error": "Something went wrong.",
     "buyNow": "Buy on"
+  },
+  "page": {
+    "products": {
+      "hero": {
+        "title": "Optical & Sunglasses",
+        "subtitle": "Explore our catalogue"
+      },
+      "meta": {
+        "title": "Premium Eyewear - Eyesoul",
+        "description": "Explore our curated selection of premium eyewear, sunglasses, and optical frames."
+      },
+      "notFound": "Product Not Found"
+    },
+    "collections": {
+      "hero": {
+        "title": "Curated Collections",
+        "subtitle": "Aesthetic & Lifestyle"
+      },
+      "meta": {
+        "title": "Eyewear Collections - Eyesoul Premium Eyewear",
+        "description": "Browse curated eyewear collections, categorized by aesthetic and lifestyle."
+      },
+      "shopTheEdit": "Shop The Edit",
+      "product": "product",
+      "products": "products",
+      "notFound": "Collection Not Found"
+    },
+    "articles": {
+      "hero": {
+        "title": "The Journal",
+        "subtitle": "Insights & Style"
+      },
+      "meta": {
+        "title": "The Journal - Eyesoul Premium Eyewear",
+        "description": "Read our latest articles on eye health, style guides, and eyewear trends."
+      },
+      "notFound": "Article Not Found",
+      "editorialTeam": "Editorial Team",
+      "journal": "Journal"
+    },
+    "brands": {
+      "hero": {
+        "title": "Curated Brands",
+        "subtitle": "Heritage & Craftsmanship"
+      },
+      "meta": {
+        "title": "Our Brands - Eyesoul Premium Eyewear",
+        "description": "Discover the heritage, design philosophy, and craftsmanship behind our curated brands."
+      },
+      "notFound": "Brand Not Found",
+      "globalHeritage": "Global Heritage",
+      "theCollection": "The Collection",
+      "products": "Products",
+      "discoverFrames": "Discover {brand} frames"
+    },
+    "services": {
+      "hero": {
+        "title": "Optical Services",
+        "subtitle": "Clinical Expertise"
+      },
+      "meta": {
+        "title": "Optical Services - Eyesoul Premium Eyewear",
+        "description": "Explore our comprehensive optical services including eye examinations, frame repairs, and warranty support."
+      },
+      "process": "Process",
+      "notFound": "Service Not Found",
+      "bookConsultation": "Book Consultation",
+      "allServices": "All Services",
+      "theProcess": "The Process",
+      "findAStore": "Find a Store"
+    },
+    "stores": {
+      "hero": {
+        "title": "Store Locator",
+        "subtitle": "Find a Showroom"
+      },
+      "meta": {
+        "title": "Store Locator - Eyesoul Premium Eyewear",
+        "description": "Find an Eyesoul showroom near you for a comprehensive eye examination and to explore our collections."
+      }
+    },
+    "contact": {
+      "hero": {
+        "title": "Get in touch",
+        "subtitle": "Concierge & Support"
+      },
+      "meta": {
+        "title": "Contact Us - Eyesoul Premium Eyewear",
+        "description": "Get in touch with the Eyesoul team for support, consultation, or to book an appointment."
+      }
+    }
+  },
+  "home": {
+    "philosophy": {
+      "title": "The Eyesoul Philosophy",
+      "body": "We believe eyewear is the most intimate accessory. It defines how the world sees you, and how you see the world. Every frame is a testament to our commitment to quality, comfort, and enduring style.",
+      "craftsmanship": {
+        "title": "Artisan Craftsmanship",
+        "desc": "Precision engineered frames designed to complement your natural features with uncompromising attention to detail."
+      },
+      "acetate": {
+        "title": "Custom Acetate",
+        "desc": "Sourced from the world's finest mills, our plant-based acetates offer rich, deep colors and incredible durability."
+      },
+      "lightweight": {
+        "title": "Lightweight Feel",
+        "desc": "Engineered for all-day comfort. You'll forget you're wearing them."
+      },
+      "lenses": {
+        "title": "Premium Optical Lenses",
+        "desc": "Anti-reflective, scratch-resistant, and tailored to your exact prescription by our in-house optical lab."
+      }
+    },
+    "collections": {
+      "title": "Curated Collections",
+      "body": "Discover eyewear curated by aesthetic, material, and lifestyle. Each collection represents a unique approach to modern optical design.",
+      "explore": "Explore All"
+    },
+    "journal": {
+      "title": "The Journal",
+      "readMore": "Read More"
+    },
+    "cta": {
+      "title": "Experience the Difference",
+      "body": "Visit our showroom for a complimentary consultation and discover your perfect frame with our dedicated opticians.",
+      "button": "Find a Store"
+    }
+  },
+  "footer": {
+    "newsletter": {
+      "title": "Join the list.",
+      "body": "Subscribe to receive updates on new arrivals, exclusive releases, and early access to collaborations."
+    },
+    "shop": "Shop",
+    "support": "Support",
+    "contact": "Contact",
+    "links": {
+      "optical": "Optical Frames",
+      "sunglasses": "Sunglasses",
+      "repairs": "Repairs & Warranty",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service"
+    },
+    "trust": {
+      "zeiss": "Zeiss Partner",
+      "checkout": "Secure Checkout"
+    }
+  },
+  "catalogue": {
+    "filters": "Filters",
+    "sort": {
+      "newest": "Sort by: Newest",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low"
+    }
+  },
+  "newsletter": {
+    "placeholder": "Email Address",
+    "success": "Thanks for subscribing! We'll keep you posted on new arrivals and exclusive releases.",
+    "error": "Something went wrong. Please try again."
+  },
+  "product": {
+    "badge": {
+      "new": "New",
+      "bestseller": "Bestseller"
+    }
+  },
+  "service": {
+    "process": "The Process"
+  },
+  "notFound": {
+    "page": "Not Found",
+    "product": "Product Not Found",
+    "brand": "Brand Not Found",
+    "collection": "Collection Not Found",
+    "article": "Article Not Found",
+    "service": "Service Not Found"
   }
 }

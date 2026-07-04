@@ -1,10 +1,26 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useTranslations } from 'next-intl';
 import { useCallback, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 
-const FILTER_CONFIG = [
+export interface FilterOption {
+  label: string;
+  value: string;
+}
+
+export interface FilterSection {
+  id: string;
+  label: string;
+  options: FilterOption[];
+}
+
+interface FilterSidebarProps {
+  dynamicFilters?: FilterSection[];
+}
+
+const FALLBACK_CONFIG: FilterSection[] = [
   {
     id: "category",
     label: "Category",
@@ -35,7 +51,8 @@ const FILTER_CONFIG = [
   },
 ];
 
-export function FilterSidebar() {
+export function FilterSidebar({ dynamicFilters }: FilterSidebarProps) {
+  const t = useTranslations('catalogue');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -43,7 +60,26 @@ export function FilterSidebar() {
     category: true,
     material: true,
     shape: true,
+    gender: true,
   });
+
+  // Merge dynamic filters into the config, falling back to hardcoded for sections not provided
+  const filterConfig: FilterSection[] = FALLBACK_CONFIG.map((fallback) => {
+    const dynamic = dynamicFilters?.find((d) => d.id === fallback.id);
+    if (dynamic && dynamic.options.length > 0) {
+      return dynamic;
+    }
+    return fallback;
+  });
+
+  // Add dynamic-only sections that don't have a fallback (e.g. gender)
+  if (dynamicFilters) {
+    for (const d of dynamicFilters) {
+      if (!FALLBACK_CONFIG.find((f) => f.id === d.id) && d.options.length > 0) {
+        filterConfig.push(d);
+      }
+    }
+  }
 
   const toggleSection = (id: string) => {
     setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -53,7 +89,7 @@ export function FilterSidebar() {
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
       if (params.get(name) === value) {
-        params.delete(name); // Toggle off if already selected
+        params.delete(name);
       } else {
         params.set(name, value);
       }
@@ -76,7 +112,7 @@ export function FilterSidebar() {
   return (
     <div className="w-full md:w-64 shrink-0 flex flex-col gap-6 sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto pr-4 custom-scrollbar">
       <div className="flex items-center justify-between border-b border-neutral-200 pb-4">
-        <h3 className="font-display font-medium text-lg">Filters</h3>
+        <h3 className="font-display font-medium text-lg">{t('filters')}</h3>
         {hasActiveFilters && (
           <button 
             onClick={clearFilters}
@@ -87,7 +123,7 @@ export function FilterSidebar() {
         )}
       </div>
 
-      {FILTER_CONFIG.map((section) => (
+      {filterConfig.map((section) => (
         <div key={section.id} className="border-b border-neutral-100 pb-4 last:border-0">
           <button
             onClick={() => toggleSection(section.id)}
@@ -107,20 +143,25 @@ export function FilterSidebar() {
             {section.options.map((option) => {
               const isActive = searchParams.get(section.id) === option.value;
               return (
-                <button
+                <label
                   key={option.value}
-                  onClick={() => handleFilterClick(section.id, option.value)}
-                  className={`flex items-center gap-3 text-sm transition-colors text-left py-1 ${
+                  className={`flex items-center gap-3 text-sm transition-colors text-left py-1 cursor-pointer ${
                     isActive ? "text-foreground font-medium" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${
+                  <input
+                    type="checkbox"
+                    checked={isActive}
+                    onChange={() => handleFilterClick(section.id, option.value)}
+                    className="sr-only peer"
+                  />
+                  <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors peer-checked:bg-foreground peer-checked:border-foreground peer-checked:text-background ${
                     isActive ? "bg-foreground border-foreground text-background" : "border-neutral-300"
                   }`}>
                     {isActive && <X className="w-3 h-3" />}
                   </div>
                   {option.label}
-                </button>
+                </label>
               );
             })}
           </div>

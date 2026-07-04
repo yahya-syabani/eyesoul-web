@@ -19,5 +19,182 @@
     "loading": "Memuat...",
     "error": "Terjadi kesalahan.",
     "buyNow": "Beli di"
+  },
+  "page": {
+    "products": {
+      "hero": {
+        "title": "Optik & Kacamata Hitam",
+        "subtitle": "Jelajahi katalog kami"
+      },
+      "meta": {
+        "title": "Kacamata Premium - Eyesoul",
+        "description": "Jelajahi koleksi kacamata premium, kacamata hitam, dan bingkai optik pilihan kami."
+      },
+      "notFound": "Produk Tidak Ditemukan"
+    },
+    "collections": {
+      "hero": {
+        "title": "Koleksi Kurasi",
+        "subtitle": "Estetika & Gaya Hidup"
+      },
+      "meta": {
+        "title": "Koleksi Kacamata - Eyesoul Premium Eyewear",
+        "description": "Jelajahi koleksi kacamata kurasi, dikelompokkan berdasarkan estetika dan gaya hidup."
+      },
+      "shopTheEdit": "Jelajahi Koleksi",
+      "product": "produk",
+      "products": "produk",
+      "notFound": "Koleksi Tidak Ditemukan"
+    },
+    "articles": {
+      "hero": {
+        "title": "Jurnal",
+        "subtitle": "Wawasan & Gaya"
+      },
+      "meta": {
+        "title": "Jurnal - Eyesoul Premium Eyewear",
+        "description": "Baca artikel terbaru kami tentang kesehatan mata, panduan gaya, dan tren kacamata."
+      },
+      "notFound": "Artikel Tidak Ditemukan",
+      "editorialTeam": "Tim Editorial",
+      "journal": "Jurnal"
+    },
+    "brands": {
+      "hero": {
+        "title": "Merek Kurasi",
+        "subtitle": "Warisan & Keahlian"
+      },
+      "meta": {
+        "title": "Merek Kami - Eyesoul Premium Eyewear",
+        "description": "Temukan warisan, filosofi desain, dan keahlian di balik merek kurasi kami."
+      },
+      "notFound": "Merek Tidak Ditemukan",
+      "globalHeritage": "Warisan Global",
+      "theCollection": "Koleksi",
+      "products": "Produk",
+      "discoverFrames": "Jelajahi kacamata {brand}"
+    },
+    "services": {
+      "hero": {
+        "title": "Layanan Optik",
+        "subtitle": "Keahlian Klinis"
+      },
+      "meta": {
+        "title": "Layanan Optik - Eyesoul Premium Eyewear",
+        "description": "Jelajahi layanan optik lengkap kami termasuk pemeriksaan mata, perbaikan bingkai, dan dukungan garansi."
+      },
+      "process": "Proses",
+      "notFound": "Layanan Tidak Ditemukan",
+      "bookConsultation": "Buat Janji Temu",
+      "allServices": "Semua Layanan",
+      "theProcess": "Proses Kami",
+      "findAStore": "Temukan Toko"
+    },
+    "stores": {
+      "hero": {
+        "title": "Lokasi Toko",
+        "subtitle": "Temukan Showroom"
+      },
+      "meta": {
+        "title": "Lokasi Toko - Eyesoul Premium Eyewear",
+        "description": "Temukan showroom Eyesoul terdekat untuk pemeriksaan mata menyeluruh dan menjelajahi koleksi kami."
+      }
+    },
+    "contact": {
+      "hero": {
+        "title": "Hubungi Kami",
+        "subtitle": "Concierge & Dukungan"
+      },
+      "meta": {
+        "title": "Hubungi Kami - Eyesoul Premium Eyewear",
+        "description": "Hubungi tim Eyesoul untuk dukungan, konsultasi, atau untuk membuat janji temu."
+      }
+    }
+  },
+  "home": {
+    "philosophy": {
+      "title": "Filosofi Eyesoul",
+      "body": "Kami percaya kacamata adalah aksesori paling personal. Ia menentukan cara dunia melihat Anda, dan cara Anda melihat dunia. Setiap bingkai adalah bukti komitmen kami terhadap kualitas, kenyamanan, dan gaya yang abadi.",
+      "craftsmanship": {
+        "title": "Keahlian Artisan",
+        "desc": "Bingkai hasil rekayasa presisi yang dirancang untuk melengkapi fitur alami Anda dengan perhatian tak tertandingi terhadap detail."
+      },
+      "acetate": {
+        "title": "Asetat Kustom",
+        "desc": "Berasal dari pabrik terbaik dunia, asetat nabati kami menawarkan warna yang kaya dan kedalaman yang luar biasa serta daya tahan yang hebat."
+      },
+      "lightweight": {
+        "title": "Ringan dan Nyaman",
+        "desc": "Dirancang untuk kenyamanan sepanjang hari. Anda akan lupa sedang memakainya."
+      },
+      "lenses": {
+        "title": "Lensa Optik Premium",
+        "desc": "Anti-reflektif, tahan gores, dan disesuaikan dengan resep tepat Anda oleh laboratorium optik internal kami."
+      }
+    },
+    "collections": {
+      "title": "Koleksi Kurasi",
+      "body": "Temukan kacamata yang dikurasi berdasarkan estetika, material, dan gaya hidup. Setiap koleksi mewakili pendekatan unik terhadap desain optik modern.",
+      "explore": "Jelajahi Semua"
+    },
+    "journal": {
+      "title": "Jurnal",
+      "readMore": "Baca Selengkapnya"
+    },
+    "cta": {
+      "title": "Rasakan Perbedaannya",
+      "body": "Kunjungi showroom kami untuk konsultasi gratis dan temukan bingkai sempurna Anda bersama optisi profesional kami.",
+      "button": "Cari Toko"
+    }
+  },
+  "footer": {
+    "newsletter": {
+      "title": "Bergabunglah.",
+      "body": "Berlangganan untuk menerima pembaruan tentang kedatangan baru, rilis eksklusif, dan akses awal ke kolaborasi."
+    },
+    "shop": "Belanja",
+    "support": "Dukungan",
+    "contact": "Kontak",
+    "links": {
+      "optical": "Bingkai Optik",
+      "sunglasses": "Kacamata Hitam",
+      "repairs": "Perbaikan & Garansi",
+      "privacy": "Kebijakan Privasi",
+      "terms": "Ketentuan Layanan"
+    },
+    "trust": {
+      "zeiss": "Mitra Zeiss",
+      "checkout": "Pembayaran Aman"
+    }
+  },
+  "catalogue": {
+    "filters": "Filter",
+    "sort": {
+      "newest": "Urutkan: Terbaru",
+      "priceAsc": "Harga: Rendah ke Tinggi",
+      "priceDesc": "Harga: Tinggi ke Rendah"
+    }
+  },
+  "newsletter": {
+    "placeholder": "Alamat Email",
+    "success": "Terima kasih telah berlangganan! Kami akan memberi tahu Anda tentang kedatangan baru dan rilis eksklusif.",
+    "error": "Terjadi kesalahan. Silakan coba lagi."
+  },
+  "product": {
+    "badge": {
+      "new": "Baru",
+      "bestseller": "Terlaris"
+    }
+  },
+  "service": {
+    "process": "Proses"
+  },
+  "notFound": {
+    "page": "Tidak Ditemukan",
+    "product": "Produk Tidak Ditemukan",
+    "brand": "Merek Tidak Ditemukan",
+    "collection": "Koleksi Tidak Ditemukan",
+    "article": "Artikel Tidak Ditemukan",
+    "service": "Layanan Tidak Ditemukan"
   }
 }

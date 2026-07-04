@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from 'next-intl';
 import { Product } from "@/lib/cms/types";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
@@ -9,6 +12,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, className = "" }: ProductCardProps) {
+  const t = useTranslations('product');
   let frontImage = "/brand-fallback.svg";
   let angleImage = null;
 
@@ -28,15 +32,17 @@ export function ProductCard({ product, className = "" }: ProductCardProps) {
     <Link href={`/products/${product.slug}`} className={`group block ${className}`}>
       {/* Image Container - Borderless, Edge-to-Edge */}
       <div className="relative aspect-[4/5] bg-[#F5F5F5] overflow-hidden rounded-sm mb-4">
-        <Image
-          src={frontImage}
-          alt={product.name}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className={`object-cover object-center transition-opacity duration-700 ${
-            angleImage ? "group-hover:opacity-0" : ""
-          }`}
-        />
+        {frontImage && (
+          <Image
+            src={frontImage}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className={`object-cover object-center transition-opacity duration-700 ${
+              angleImage ? "group-hover:opacity-0" : ""
+            }`}
+          />
+        )}
         {angleImage && (
           <Image
             src={angleImage}
@@ -49,12 +55,12 @@ export function ProductCard({ product, className = "" }: ProductCardProps) {
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
           {product.status?.newArrival && (
             <Badge variant="secondary" className="bg-white/90 backdrop-blur-md text-[10px] uppercase tracking-widest font-semibold px-2 py-0.5 rounded-sm shadow-sm border-none">
-              New
+              {t('badge.new')}
             </Badge>
           )}
           {product.status?.bestseller && (
             <Badge variant="secondary" className="bg-foreground text-background text-[10px] uppercase tracking-widest font-semibold px-2 py-0.5 rounded-sm shadow-sm border-none">
-              Bestseller
+              {t('badge.bestseller')}
             </Badge>
           )}
         </div>

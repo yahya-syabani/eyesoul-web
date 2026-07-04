@@ -8,11 +8,14 @@ import { MessageCircle, Clock, Tag, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { extractLexicalText } from "@/lib/utils/lexical";
 import { RichText } from "@/components/ui/RichText";
+import { getTranslations } from 'next-intl/server';
+import { PageHero } from "@/components/ui/PageHero";
 
-export const metadata = {
-  title: "Optical Services - Eyesoul Premium Eyewear",
-  description: "Explore our comprehensive optical services including eye examinations, frame adjustments, and lens fitting.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.services' });
+  return { title: t('meta.title'), description: t('meta.description') };
+}
 
 export default async function ServicesPage({
   params,
@@ -20,6 +23,7 @@ export default async function ServicesPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.services' });
   const [services, settings] = await Promise.all([
     getServices(locale as Locale),
     getSiteSettings(locale as Locale),
@@ -28,16 +32,15 @@ export default async function ServicesPage({
 
   return (
     <main className="flex-grow bg-neutral-50/30">
-      <div className="container mx-auto px-4 py-12 md:py-24">
-        
-        <RevealOnScroll className="mb-16">
-          <h1 className="font-display text-4xl md:text-5xl font-light mb-4">
-            Optical Services
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl">
-            Our expert optometrists and opticians provide comprehensive care to ensure your vision is clear and your frames fit perfectly.
-          </p>
-        </RevealOnScroll>
+      <PageHero
+        title={t('hero.title')}
+        subtitle={t('hero.subtitle')}
+        imageUrl="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?q=80&w=2940&auto=format&fit=crop"
+        imageAlt="Modern optical equipment"
+        height="standard"
+        overlayOpacity={0.5}
+      />
+      <div className="container mx-auto px-4 py-16 md:py-24">
 
         {services.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
@@ -73,7 +76,7 @@ export default async function ServicesPage({
                       
                       {service.process && (
                         <div className="text-sm text-neutral-600 mb-6 border-l-2 border-primary/20 pl-4 py-1">
-                          <strong className="block text-xs uppercase tracking-wider text-neutral-400 mb-1">The Process</strong>
+                          <strong className="block text-xs uppercase tracking-wider text-neutral-400 mb-1">{t('process')}</strong>
                           <RichText data={service.process} />
                         </div>
                       )}

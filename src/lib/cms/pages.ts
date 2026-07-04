@@ -5,8 +5,8 @@ export interface Page {
   id: string;
   title: string;
   slug: string;
-  heroImage?: any;
-  content: any;
+  heroImage?: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- Media upload
+  content: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- Lexical rich text
   seo?: {
     title?: string;
     description?: string;

@@ -1,10 +1,26 @@
-import { getProducts } from "@/lib/cms/products";
+import { getProducts, getProductFilterOptions } from "@/lib/cms/products";
 import { getCategoryBySlug } from "@/lib/cms/categories";
 import { CatalogueGrid } from "@/components/ui/CatalogueGrid";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { FilterSidebar } from "@/components/ui/FilterSidebar";
+import { SortSelect } from "@/components/ui/SortSelect";
 import { getTranslations } from "next-intl/server";
 import { Locale } from "@/lib/cms/types";
+import type { Metadata } from "next";
+import { PageHero } from "@/components/ui/PageHero";
+
+export async function generateMetadata({ params, searchParams }: { params: Promise<{ locale: string }>; searchParams: Promise<{ [key: string]: string | undefined }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const sp = await searchParams;
+  const cat = sp.category || "all";
+  const baseUrl = process.env.FRONTEND_URL || "http://localhost:3001";
+  const t = await getTranslations({ locale, namespace: 'page.products' });
+  return {
+    title: `${t('meta.title')}${cat !== "all" ? ` (${cat})` : ""}`,
+    description: t('meta.description'),
+    alternates: { canonical: `${baseUrl}/${locale}/products` },
+  };
+}
 
 export default async function ProductsPage({
   params,
@@ -14,14 +30,14 @@ export default async function ProductsPage({
   searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
   const { locale } = await params;
-  const t = await getTranslations("Navigation");
+  const t = await getTranslations({ locale, namespace: 'page.products' });
   const sp = await searchParams;
   
-  // Extract filters from URL
   const categorySlug = sp.category;
   const material = sp.material;
   const shape = sp.shape;
   const gender = sp.gender;
+  const sort = sp.sort || "newest";
   
   // Fetch products from our CMS adapter
   const productsRes = await getProducts({ 
@@ -29,7 +45,8 @@ export default async function ProductsPage({
     categorySlug,
     material,
     shape,
-    gender
+    gender,
+    sort
   });
   const products = productsRes.docs || [];
 
@@ -40,24 +57,25 @@ export default async function ProductsPage({
   }
   const merchandisingBlocks = category?.merchandising || [];
 
+  // Fetch dynamic filter options from product data
+  const dynamicFilters = await getProductFilterOptions(locale as Locale);
+
   return (
     <main className="flex-grow bg-neutral-50/30">
-      <div className="container pt-32 pb-16 md:pt-40 md:pb-24">
-        
-        {/* Header */}
-        <RevealOnScroll className="mb-12">
-          <h1 className="font-display text-4xl md:text-5xl font-light mb-4">
-            {t("products")}
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl">
-            Explore our curated selection of premium eyewear. Designed for comfort, crafted for durability.
-          </p>
-        </RevealOnScroll>
+      <PageHero
+        title={t('hero.title')}
+        subtitle={t('hero.subtitle')}
+        imageUrl="https://images.unsplash.com/photo-1577803645773-f96470509666?q=80&w=2940&auto=format&fit=crop"
+        imageAlt="Clean eyewear product flat lay"
+        height="standard"
+        overlayOpacity={0.4}
+      />
+      <div className="container py-16 md:py-24">
 
         {/* Filter & Grid Layout */}
         <div className="flex flex-col md:flex-row gap-8 items-start">
           
-          <FilterSidebar />
+          <FilterSidebar dynamicFilters={dynamicFilters} />
 
           <div className="flex-1 w-full">
             {/* Filters/Sort Shell (MVP) */}
@@ -65,12 +83,8 @@ export default async function ProductsPage({
               <div className="text-sm text-muted-foreground">
                 Showing {products.length} {products.length === 1 ? 'result' : 'results'}
               </div>
-              {/* Future: Select Dropdown for Sort */}
-              <select className="text-sm border border-neutral-200 rounded-md px-3 py-1.5 bg-transparent outline-none focus:border-foreground">
-                <option>Sort by: Newest</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-              </select>
+              {/* Sort Dropdown */}
+              <SortSelect defaultValue={sort} />
             </RevealOnScroll>
 
             {/* Product Grid */}

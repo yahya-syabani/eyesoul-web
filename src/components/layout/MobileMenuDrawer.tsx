@@ -2,10 +2,11 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "@/i18n/routing";
-import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { X, MapPin } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { Brand, EyewearCollection } from '@/lib/cms/types';
 import { Category } from '@/lib/cms/categories';
+import { useTranslations } from 'next-intl';
 
 interface MobileMenuDrawerProps {
   isOpen: boolean;
@@ -16,13 +17,15 @@ interface MobileMenuDrawerProps {
 }
 
 export function MobileMenuDrawer({ isOpen, onClose, brands = [], collections = [], categories = [] }: MobileMenuDrawerProps) {
+  const t = useTranslations('Navigation');
+  
   const links = [
     { label: "Optical", href: "/products?category=frames" },
     { label: "Sunglasses", href: "/products?category=sunglasses" },
-    { label: "Collections", href: "/collections" },
-    { label: "Brands", href: "/brands" },
+    { label: t('collections'), href: "/collections" },
+    { label: t('brands'), href: "/brands" },
+    { label: t('services'), href: "/services" },
     { label: "Journal", href: "/articles" },
-    { label: "Stores", href: "/store-locator" },
   ];
 
   return (
@@ -79,8 +82,12 @@ export function MobileMenuDrawer({ isOpen, onClose, brands = [], collections = [
 
             {/* Footer / Utilities */}
             <div className="mt-auto px-6 py-8 border-t border-border/50 bg-neutral-50 flex flex-col space-y-4">
+              <Link href="/store-locator" onClick={onClose} className={`${buttonVariants({ size: "lg" })} w-full justify-center gap-2 rounded-none mb-4`}>
+                <MapPin className="w-4 h-4" />
+                {t('stores')}
+              </Link>
               <Link href="/faq" onClick={onClose} className="text-sm font-medium hover:text-primary transition-colors uppercase tracking-wider">FAQ & Support</Link>
-              <Link href="/contact" onClick={onClose} className="text-sm font-medium hover:text-primary transition-colors uppercase tracking-wider">Contact Us</Link>
+              <Link href="/contact" onClick={onClose} className="text-sm font-medium hover:text-primary transition-colors uppercase tracking-wider">{t('contact')}</Link>
             </div>
           </motion.div>
         </>

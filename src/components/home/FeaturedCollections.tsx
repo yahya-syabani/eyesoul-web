@@ -1,108 +1,66 @@
 import { EyewearCollection } from "@/lib/cms/types";
+import { getTranslations } from 'next-intl/server';
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Link } from "@/i18n/routing";
-import Image from "next/image";
+import { FeaturedCollectionCard } from "@/components/home/FeaturedCollectionCard";
 
 interface FeaturedCollectionsProps {
   collections: EyewearCollection[];
+  locale: string;
 }
 
-export function FeaturedCollections({ collections }: FeaturedCollectionsProps) {
+export async function FeaturedCollections({ collections, locale }: FeaturedCollectionsProps) {
+  const t = await getTranslations({ locale, namespace: 'home' });
+
   if (collections.length === 0) return null;
 
   const displayed = collections.slice(0, 3);
 
   return (
-    <section className="py-16 md:py-24 bg-background">
-      <div className="container">
+    <section className="py-16 md:py-20 bg-background border-t border-neutral-100">
+      <div className="container mx-auto px-6 md:px-12 lg:px-20">
         
-        <RevealOnScroll className="mb-16 md:mb-24 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+        <RevealOnScroll className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
           <div className="max-w-2xl">
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light mb-6 tracking-tight">
-              Curated <br />
-              <span className="italic text-muted-foreground">Collections</span>
+            <h2 className="font-display text-4xl md:text-5xl font-light mb-6 tracking-tight">
+              {t('collections.title')}
             </h2>
             <p className="text-muted-foreground text-lg leading-relaxed">
-              Discover eyewear curated by aesthetic, material, and lifestyle. Each collection represents a unique approach to modern optical design.
+              {t('collections.body')}
             </p>
           </div>
           <Link
             href="/collections"
-            className="group flex items-center gap-4 text-sm font-medium tracking-widest uppercase hover:text-primary/70 transition-colors"
+            className="group flex items-center justify-center border border-neutral-300 text-neutral-900 px-8 py-3 text-sm font-medium uppercase tracking-widest hover:bg-neutral-100 transition-colors rounded-sm shrink-0"
           >
-            Explore All 
-            <span className="w-12 h-[1px] bg-foreground group-hover:w-16 transition-all duration-300" />
+            {t('collections.explore')}
           </Link>
         </RevealOnScroll>
 
-        <div className="flex flex-col space-y-16 md:space-y-0 md:grid md:grid-cols-12 md:gap-x-8 md:gap-y-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
           {displayed.map((collection, index) => {
-            const coverUrl =
-              collection.coverImage && typeof collection.coverImage === "object"
-                ? collection.coverImage.url
-                : null;
-
-            // Asymmetrical placement logic
-            let colSpan = "md:col-span-12";
-            let alignmentClasses = "";
-            let imageAspect = "aspect-[16/9]";
-            let isReversed = false;
+            // High-density Bento Box placement logic
+            let colSpan = "lg:col-span-12";
+            let imageAspect = "aspect-[4/3]";
 
             if (index === 0) {
-              // Large hero-like collection taking up 8 columns, aligned left
-              colSpan = "md:col-span-8";
-              alignmentClasses = "";
-              imageAspect = "aspect-[4/3]";
+              // Massive anchor card spanning two rows on the left
+              colSpan = "lg:col-span-8 lg:row-span-2";
+              imageAspect = "aspect-[4/3] lg:aspect-auto lg:h-[600px] xl:h-[700px]"; // Ensure it has enough fixed height to match two squares
             } else if (index === 1) {
-              // Tall portrait collection on the right side
-              colSpan = "md:col-span-5 md:col-start-7";
-              alignmentClasses = "md:mt-[-20%]"; // Pull up to overlap slightly with previous row space
-              imageAspect = "aspect-[3/4]";
+              // Top right square
+              colSpan = "lg:col-span-4";
+              imageAspect = "aspect-[4/3] lg:aspect-auto lg:h-full";
             } else if (index === 2) {
-              // Medium landscape collection on the left
-              colSpan = "md:col-span-7";
-              alignmentClasses = "";
-              imageAspect = "aspect-[16/10]";
+              // Bottom right square
+              colSpan = "lg:col-span-4";
+              imageAspect = "aspect-[4/3] lg:aspect-auto lg:h-full";
             }
 
             return (
-              <div key={collection.id} className={`${colSpan} ${alignmentClasses}`}>
-                <RevealOnScroll delay={0.1}>
-                  <Link href={`/collections/${collection.slug}`} className="block group">
-                    <div className="flex flex-col">
-                      <div className={`relative ${imageAspect} overflow-hidden bg-[#F5F5F5] mb-6`}>
-                        {coverUrl ? (
-                          <Image
-                            src={coverUrl}
-                            alt={collection.name}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-cover group-hover:scale-105 transition-transform duration-1000 ease-[0.25,0.25,0,1]"
-                          />
-                        ) : (
-                          <Image
-                            src="/brand-fallback.svg"
-                            alt={collection.name}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-cover"
-                          />
-                        )}
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
-                      </div>
-                      
-                      <div className="flex flex-col max-w-lg">
-                        <h3 className="font-display text-2xl md:text-3xl font-medium mb-3 group-hover:text-primary/70 transition-colors">
-                          {collection.name}
-                        </h3>
-                        {collection.description && (
-                          <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
-                            {collection.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </Link>
+              <div key={collection.id} className={`${colSpan} h-full`}>
+                <RevealOnScroll delay={0.1} className="h-full">
+                  <FeaturedCollectionCard collection={collection} imageAspect={imageAspect} />
                 </RevealOnScroll>
               </div>
             );

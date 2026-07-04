@@ -2,6 +2,7 @@
  * Simple utility to extract text from Payload v3 Lexical JSON
  * Safely handles nulls, strings, and complex nested nodes.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function extractLexicalText(node: any): string {
   if (!node) return "";
   if (typeof node === "string") return node;

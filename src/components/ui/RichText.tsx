@@ -1,4 +1,8 @@
-interface RichTextNode {
+/**
+ * Recursively renders Lexical JSON nodes to React elements.
+ * Server-compatible — no client JS needed.
+ */
+export type RichTextNode = {
   type?: string;
   text?: string;
   children?: RichTextNode[];
@@ -12,7 +16,7 @@ interface RichTextNode {
   url?: string;
   rel?: string;
   target?: string;
-}
+};
 
 /**
  * Recursively renders Lexical JSON nodes to React elements.
@@ -109,6 +113,7 @@ export function renderLexical(node: RichTextNode, key?: number): React.ReactNode
  * Full rich text renderer component.
  * Wraps rendered content in a prose container for typography.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function RichText({ data, className = '' }: { data: any; className?: string }) {
   if (!data) return null;
   const root: RichTextNode = data.root || data;

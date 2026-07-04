@@ -1,5 +1,6 @@
 import { getArticleBySlug } from "@/lib/cms/articles";
 import { Locale } from "@/lib/cms/types";
+import { getTranslations } from 'next-intl/server';
 import { notFound } from "next/navigation";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { extractLexicalText } from "@/lib/utils/lexical";
@@ -7,12 +8,14 @@ import { RichText } from "@/components/ui/RichText";
 import { Link } from "@/i18n/routing";
 import { ChevronLeft } from "lucide-react";
 import Image from "next/image";
+import { getMediaUrl } from "@/lib/utils/media";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   const article = await getArticleBySlug(slug, locale as Locale);
+  const t = await getTranslations({ locale, namespace: 'page.articles' });
   
-  if (!article) return { title: 'Article Not Found' };
+  if (!article) return { title: t('notFound') };
 
   return {
     title: article.seo?.metaTitle || `${article.title} - Eyesoul Journal`,
@@ -26,21 +29,20 @@ export default async function ArticleDetailPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.articles' });
   
   const article = await getArticleBySlug(slug, locale as Locale);
   if (!article) notFound();
 
   let coverUrl = null;
   let coverAlt = article.title;
-  if (article.coverImage && typeof article.coverImage === 'object' && article.coverImage.url) {
-    coverUrl = article.coverImage.url;
-    if (article.coverImage.alt) coverAlt = article.coverImage.alt;
-  }
+  coverUrl = getMediaUrl(article.coverImage);
+  if (article.coverImage && typeof article.coverImage === 'object' && article.coverImage.alt) coverAlt = article.coverImage.alt;
 
   // Author name extraction based on Payload schema (assumes it's a User object)
   const authorName = typeof article.author === 'object' && article.author?.name 
     ? article.author.name 
-    : 'Eyesoul Editorial Team';
+    : t('editorialTeam');
 
   return (
     <main className="flex-grow bg-background">
@@ -52,7 +54,7 @@ export default async function ArticleDetailPage({
             <div className="mb-8">
               <Link href="/articles" className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
                 <ChevronLeft className="w-4 h-4 mr-1" />
-                Back to Journal
+                Back to {t('journal')}
               </Link>
             </div>
             

@@ -3,6 +3,7 @@ import { Locale } from "@/lib/cms/types";
 import { notFound } from "next/navigation";
 import { RichText } from "@/components/ui/RichText";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import Image from "next/image";
 
 export async function generateMetadata({
   params,
@@ -36,8 +37,25 @@ export default async function GenericPage({
     notFound();
   }
 
+  const heroImgUrl =
+    page.heroImage && typeof page.heroImage === "object" ? page.heroImage.url : null;
+
   return (
-    <main className="flex-grow bg-background pt-32 pb-24">
+    <main className="flex-grow bg-background pt-24 pb-24">
+      {/* Hero Image */}
+      {heroImgUrl && (
+        <div className="relative w-full h-[40vh] min-h-[300px] overflow-hidden mb-16">
+          <Image
+            src={heroImgUrl}
+            alt={page.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/10 to-transparent" />
+        </div>
+      )}
+
       <div className="container mx-auto px-4 max-w-4xl">
         <RevealOnScroll className="mb-16">
           <h1 className="font-display text-4xl md:text-5xl font-light mb-6 tracking-tight">

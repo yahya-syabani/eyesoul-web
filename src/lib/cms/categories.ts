@@ -7,7 +7,7 @@ export interface MerchandisingBlock {
   // Banner fields
   title?: string;
   subtitle?: string;
-  image?: any;
+  image?: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- Media upload
   ctaLabel?: string;
   ctaLink?: string;
   spanTwoCols?: boolean;
@@ -22,7 +22,7 @@ export interface Category {
   name: string;
   slug: string;
   description?: string;
-  heroImage?: any;
+  heroImage?: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- Media upload
   merchandising?: MerchandisingBlock[];
 }
 

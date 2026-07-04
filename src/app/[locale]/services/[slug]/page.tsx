@@ -1,6 +1,7 @@
 import { getServiceBySlug } from "@/lib/cms/services";
 import { getSiteSettings } from "@/lib/cms/settings";
 import { Locale } from "@/lib/cms/types";
+import { getTranslations } from 'next-intl/server';
 import { notFound } from "next/navigation";
 import { RichText } from "@/components/ui/RichText";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
@@ -15,9 +16,10 @@ export async function generateMetadata({
 }) {
   const { slug, locale } = await params;
   const service = await getServiceBySlug(slug, locale as Locale);
+  const t = await getTranslations({ locale, namespace: 'page.services' });
 
   if (!service) {
-    return { title: "Service Not Found" };
+    return { title: t('notFound') };
   }
 
   return {
@@ -32,6 +34,7 @@ export default async function ServiceDetailsPage({
   params: Promise<{ slug: string; locale: string }>;
 }) {
   const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.services' });
   const [service, settings] = await Promise.all([
     getServiceBySlug(slug, locale as Locale),
     getSiteSettings(locale as Locale),
@@ -42,7 +45,7 @@ export default async function ServiceDetailsPage({
   }
 
   const whatsappNumber = settings?.whatsapp || "6281234567890";
-  const defaultCta = "Book Consultation";
+  const defaultCta = t('bookConsultation');
 
   return (
     <main className="flex-grow bg-background">
@@ -51,7 +54,7 @@ export default async function ServiceDetailsPage({
         <RevealOnScroll>
           <Link href={`/${locale}/services`} className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to All Services
+            Back to {t('allServices')}
           </Link>
           
           <h1 className="font-display text-4xl md:text-5xl font-light mb-6 tracking-tight">
@@ -84,7 +87,7 @@ export default async function ServiceDetailsPage({
           {service.process && (
             <div className="bg-neutral-50 p-8 md:p-12 rounded-2xl mb-12 border border-neutral-100">
               <h2 className="text-xs font-medium uppercase tracking-widest text-neutral-400 mb-6">
-                The Process
+                {t('theProcess')}
               </h2>
               <div className="prose prose-neutral prose-lg max-w-none">
                 <RichText data={service.process} />
@@ -106,7 +109,7 @@ export default async function ServiceDetailsPage({
               href={`/${locale}/store-locator`}
               className={buttonVariants({ variant: "outline", size: "lg", className: "px-8" })}
             >
-              Find a Store
+              {t('findAStore')}
             </Link>
           </div>
         </RevealOnScroll>

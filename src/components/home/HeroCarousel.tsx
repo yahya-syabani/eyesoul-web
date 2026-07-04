@@ -2,11 +2,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Link } from "@/i18n/routing";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HomepageBanner } from "@/lib/cms/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedText } from "@/components/ui/AnimatedText";
+import { Link } from "@/i18n/routing";
 
 interface HeroCarouselProps {
   banners: HomepageBanner[];
@@ -21,7 +20,6 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
   }, [length]);
 
   const goNext = useCallback(() => goTo(current + 1), [goTo, current]);
-  const goPrev = useCallback(() => goTo(current - 1), [goTo, current]);
 
   useEffect(() => {
     if (length <= 1) return;
@@ -32,7 +30,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
   if (length === 0) return null;
 
   return (
-    <section className="relative h-[85vh] min-h-[600px] w-full overflow-hidden bg-neutral-900 flex items-center justify-center">
+    <section className="relative h-[85vh] min-h-[600px] w-full overflow-hidden bg-neutral-900 flex items-center justify-center -mt-20 lg:-mt-24">
       <AnimatePresence mode="wait">
         {banners.map((banner, index) => {
           if (index !== current) return null;
@@ -57,15 +55,14 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
                   priority={index === 0}
                 />
               )}
-              {/* Very subtle scrim only for text legibility, no heavy gradients */}
-              <div className="absolute inset-0 bg-black/20" />
+              {/* Removed heavy scrim for premium editorial feel */}
             </motion.div>
           );
         })}
       </AnimatePresence>
 
       {/* Content overlay */}
-      <div className="relative z-10 container mx-auto px-4 flex flex-col items-center justify-center text-center mt-12">
+      <div className="absolute inset-0 z-10 container mx-auto px-6 md:px-12 lg:px-20 flex flex-col items-center justify-center text-center pointer-events-none">
         <AnimatePresence mode="wait">
           <motion.div
             key={`content-${current}`}
@@ -73,7 +70,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.25, 0.25, 0, 1] }}
-            className="max-w-4xl flex flex-col items-center"
+            className="max-w-4xl flex flex-col items-center pointer-events-auto"
           >
             {banners[current]?.subtitle && (
               <p className="text-white/90 font-sans tracking-[0.2em] uppercase text-xs md:text-sm mb-6 font-medium">
@@ -85,14 +82,14 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
               <AnimatedText 
                 text={banners[current]?.title}
                 el="h1"
-                className="font-display text-5xl md:text-7xl lg:text-8xl font-light text-white mb-8 tracking-tight leading-[1.1] drop-shadow-sm"
+                className="font-display text-6xl md:text-8xl lg:text-9xl font-light text-white mb-8 tracking-tight leading-[1.0] mix-blend-difference"
               />
             )}
             
             {banners[current]?.ctaLink && (
-              <Link
+              <Link 
                 href={banners[current].ctaLink!}
-                className="group inline-flex items-center justify-center border border-white/30 bg-transparent text-white px-10 py-3.5 text-sm font-medium tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-500"
+                className="inline-flex items-center justify-center bg-white text-black px-10 py-3.5 text-sm font-medium tracking-wide uppercase hover:bg-white/90 transition-colors"
               >
                 {banners[current]?.ctaLabel || "Discover"}
               </Link>
@@ -103,7 +100,7 @@ export function HeroCarousel({ banners }: HeroCarouselProps) {
 
       {/* Navigation - Minimalist Progress Lines */}
       {length > 1 && (
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+        <div className="absolute bottom-12 right-12 z-20 flex gap-3 pointer-events-auto">
           {banners.map((_, index) => (
             <button
               key={index}

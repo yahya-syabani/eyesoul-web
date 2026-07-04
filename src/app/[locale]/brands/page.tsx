@@ -3,11 +3,14 @@ import { Locale } from "@/lib/cms/types";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
+import { getTranslations } from 'next-intl/server';
+import { PageHero } from "@/components/ui/PageHero";
 
-export const metadata = {
-  title: "Our Brands - Eyesoul Premium Eyewear",
-  description: "Discover the heritage, design philosophy, and craftsmanship of the world's most distinguished eyewear brands available at Eyesoul.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.brands' });
+  return { title: t('meta.title'), description: t('meta.description') };
+}
 
 export default async function BrandsPage({
   params,
@@ -15,20 +18,20 @@ export default async function BrandsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.brands' });
   const brands = await getBrands(locale as Locale);
 
   return (
     <main className="flex-grow bg-neutral-50/30">
-      <div className="container pt-32 pb-16 md:pt-40 md:pb-24">
-        
-        <RevealOnScroll className="mb-16">
-          <h1 className="font-display text-4xl md:text-5xl font-light mb-4">
-            Curated Brands
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl">
-            We partner with the world's most distinguished eyewear designers. Explore the heritage and craftsmanship behind each collection.
-          </p>
-        </RevealOnScroll>
+      <PageHero
+        title={t('hero.title')}
+        subtitle={t('hero.subtitle')}
+        imageUrl="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2940&auto=format&fit=crop"
+        imageAlt="Luxury retail interior"
+        height="standard"
+        overlayOpacity={0.5}
+      />
+      <div className="container py-16 md:py-24">
 
         {brands.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">

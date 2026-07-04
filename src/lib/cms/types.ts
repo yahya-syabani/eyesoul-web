@@ -32,7 +32,7 @@ export interface Product {
   category: number | import('./categories').Category | string;
   collections?: number[] | EyewearCollection[];
   sku: string;
-  description: any; // Lexical rich text
+  description: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- Lexical rich text
   specs?: {
     material?: string;
     shape?: string;
@@ -59,13 +59,15 @@ export interface Product {
     url: string;
     inStock: boolean;
   }[];
+  relatedProducts?: (number | Product)[];
+  relatedArticles?: (number | any)[]; // eslint-disable-line @typescript-eslint/no-explicit-any -- populated Article objects
 }
 
 export interface Brand {
   id: number;
   name: string;
   slug: string;
-  history?: any;
+  history?: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- Lexical rich text
   story?: string;
   country?: string;
   designPhilosophy?: string;
@@ -92,7 +94,7 @@ export interface StoreLocation {
     open: string;
     close: string;
   }[];
-  servicesOffered?: any[];
+  servicesOffered?: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any -- Service relationships
   hasParking?: boolean;
   images?: { image: number | Media }[];
 }
@@ -102,7 +104,7 @@ export interface Service {
   name: string;
   slug: string;
   description?: string;
-  process?: any;
+  process?: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- Lexical rich text
   duration?: string;
   pricing?: string;
   ctaLabel?: string;
@@ -112,10 +114,10 @@ export interface Article {
   id: number;
   title: string;
   slug: string;
-  author: any; // User relationship
+  author: number | { id: number; name: string; email?: string };
   coverImage?: number | Media;
   excerpt?: string;
-  content: any; // Lexical rich text
+  content: Record<string, unknown>; // Lexical rich text JSON
   publishedAt?: string;
   seo?: {
     metaTitle?: string;
@@ -154,6 +156,7 @@ export interface HomepageBanner {
   image: number | Media;
   ctaLink?: string;
   ctaLabel?: string;
+  featuredProduct?: number | Product;
   order?: number;
 }
 

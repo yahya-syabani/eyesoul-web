@@ -1,7 +1,7 @@
 import { getProductBySlug } from "@/lib/cms/products";
 import { BuyMarketplaceButton } from "@/components/ui/BuyMarketplaceButton";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { Locale, Product } from "@/lib/cms/types";
+import { Locale } from "@/lib/cms/types";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
@@ -13,7 +13,8 @@ import { RichText } from "@/components/ui/RichText";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
   const product = await getProductBySlug(slug, locale as Locale);
-  if (!product) return { title: "Product Not Found" };
+  const t = await getTranslations({ locale, namespace: 'page.products' });
+  if (!product) return { title: t('notFound') };
   return {
     title: `${product.name} - Eyesoul Premium Eyewear`,
     description: product.description ? extractLexicalText(product.description).slice(0, 160) : undefined,
@@ -43,8 +44,32 @@ export default async function ProductDetailPage({
   const mainImage = images.length > 0 ? images[0].url : "/brand-fallback.svg";
   const mainImageAlt = images.length > 0 ? (images[0].alt || product.name) : product.name;
 
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    sku: product.sku,
+    description: product.description ? extractLexicalText(product.description).slice(0, 300) : undefined,
+    brand: typeof product.brand === "object" && product.brand?.name ? {
+      "@type": "Brand",
+      name: product.brand.name,
+    } : undefined,
+    offers: {
+      "@type": "Offer",
+      availability: product.status?.available !== false
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      url: `${process.env.FRONTEND_URL || "http://localhost:3001"}/${locale}/products/${product.slug}`,
+    },
+    image: images.length > 0 ? images[0].url : undefined,
+  };
+
   return (
     <main className="flex-grow bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
       <div className="container pt-32 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
           
@@ -121,6 +146,63 @@ export default async function ProductDetailPage({
 
         </div>
       </div>
+
+      {/* Related Products */}
+      {(() => {
+        const related = product.relatedProducts;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const items: { id: number; slug: string; name: string; images?: { front?: { url?: string } } }[] = Array.isArray(related) ? (related.filter((r) => typeof r === 'object' && r !== null) as any[]) : [];
+        if (items.length === 0) return null;
+        return (
+          <section className="container pt-16 pb-8 border-t border-neutral-100">
+            <RevealOnScroll>
+              <h2 className="font-display text-2xl md:text-3xl font-light mb-8">Complete the Look</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                {items.slice(0, 4).map((rp) => {
+                const imgUrl = rp.images?.front?.url ? rp.images.front.url : '/brand-fallback.svg';
+                  return (
+                    <Link key={rp.id} href={`/products/${rp.slug}`} className="group block">
+                      <div className="relative aspect-square bg-neutral-100 rounded-lg overflow-hidden mb-3">
+                        <Image src={imgUrl} alt={rp.name} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                      </div>
+                      <h3 className="font-display font-medium text-sm group-hover:text-primary/70 transition-colors">{rp.name}</h3>
+                    </Link>
+                  );
+                })}
+              </div>
+            </RevealOnScroll>
+          </section>
+        );
+      })()}
+
+      {/* Related Articles */}
+      {(() => {
+        const related = product.relatedArticles;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const items: { id: number; slug: string; title: string; excerpt?: string; coverImage?: { url?: string } }[] = Array.isArray(related) ? (related.filter((r) => typeof r === 'object' && r !== null) as any[]) : [];
+        if (items.length === 0) return null;
+        return (
+          <section className="container pb-20">
+            <RevealOnScroll>
+              <h2 className="font-display text-2xl md:text-3xl font-light mb-8">Related Articles</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {items.slice(0, 3).map((ra) => {
+                  const imgUrl = ra.coverImage && typeof ra.coverImage === 'object' ? ra.coverImage.url : null;
+                  return (
+                    <Link key={ra.id} href={`/articles/${ra.slug}`} className="group block">
+                      <div className="relative aspect-[16/10] bg-neutral-100 rounded-lg overflow-hidden mb-3">
+                        {imgUrl ? <Image src={imgUrl} alt={ra.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" /> : <div className="w-full h-full flex items-center justify-center text-neutral-400 text-xs">No Image</div>}
+                      </div>
+                      <h3 className="font-display font-medium group-hover:text-primary/70 transition-colors">{ra.title}</h3>
+                      {ra.excerpt && <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{ra.excerpt}</p>}
+                    </Link>
+                  );
+                })}
+              </div>
+            </RevealOnScroll>
+          </section>
+        );
+      })()}
     </main>
   );
 }

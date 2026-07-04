@@ -4,11 +4,15 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
+import { getMediaUrl } from "@/lib/utils/media";
+import { getTranslations } from 'next-intl/server';
+import { PageHero } from "@/components/ui/PageHero";
 
-export const metadata = {
-  title: "The Journal - Eyesoul Premium Eyewear",
-  description: "Read our latest articles on eye health, style guides, and eyewear care.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.articles' });
+  return { title: t('meta.title'), description: t('meta.description') };
+}
 
 export default async function ArticlesPage({
   params,
@@ -16,38 +20,34 @@ export default async function ArticlesPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.articles' });
   const articles = await getArticles(locale as Locale);
 
   return (
     <main className="flex-grow bg-background">
-      <div className="container pt-32 pb-16 md:pt-40 md:pb-24">
-        
-        <RevealOnScroll className="mb-16">
-          <h1 className="font-display text-4xl md:text-5xl font-light mb-4">
-            The Journal
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl">
-            Insights on style, guides on eye health, and the latest news from Eyesoul.
-          </p>
-        </RevealOnScroll>
+      <PageHero
+        title={t('hero.title')}
+        subtitle={t('hero.subtitle')}
+        imageUrl="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2960&auto=format&fit=crop"
+        imageAlt="Person reading a journal in eyewear"
+        height="standard"
+        overlayOpacity={0.4}
+      />
+      <div className="container py-16 md:py-24">
 
         {articles.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {articles.map((article, index) => {
-              let coverUrl = "/placeholder.png";
-              let coverAlt = article.title;
-              if (article.coverImage && typeof article.coverImage === 'object' && article.coverImage.url) {
-                coverUrl = article.coverImage.url;
-                if (article.coverImage.alt) coverAlt = article.coverImage.alt;
-              }
+              const coverUrl = getMediaUrl(article.coverImage);
+              const coverAlt = article.title;
 
               return (
                 <RevealOnScroll key={article.id} delay={0.1 * index}>
                   <Link href={`/articles/${article.slug}`} className="block group h-full">
                     <Card className="h-full overflow-hidden border-transparent shadow-none hover:shadow-lg transition-all duration-300 bg-neutral-50/50">
                       <CardHeader className="p-0 relative aspect-[16/10] overflow-hidden bg-neutral-100">
-                        {coverUrl !== "/placeholder.png" ? (
-                          <Image 
+                        {coverUrl && coverUrl !== "/placeholder.png" ? (
+                          <Image
                             src={coverUrl}
                             alt={coverAlt}
                             fill
