@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { StoreLocation } from "@/lib/cms/types";
-import { StoreMap } from "@/components/ui/StoreMap";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { MapPin, Navigation, Phone, MessageCircle, Clock, Search, Locate } from "lucide-react";
+
+const LazyMap = lazy(() => import("@/components/ui/LeafletMap"));
 
 interface StoreLocatorClientProps {
   stores: StoreLocation[];
@@ -99,12 +100,14 @@ export function StoreLocatorClient({ stores }: StoreLocatorClientProps) {
         
         {/* Map Side (Top on Mobile, Right on Desktop) */}
         <div className="w-full lg:w-[55%] h-[50vh] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 rounded-2xl overflow-hidden shadow-lg border border-neutral-200 order-1 lg:order-2 z-10 bg-neutral-100">
-          <StoreMap 
-            stores={filteredStores} 
-            activeStoreId={activeStoreId} 
-            onStoreSelect={setActiveStoreId}
-            className="rounded-2xl"
-          />
+          <Suspense fallback={<div className="w-full h-full min-h-[400px] bg-neutral-100 flex flex-col items-center justify-center p-6 text-center animate-pulse"><MapPin className="h-10 w-10 text-neutral-300 mb-4 animate-bounce" /><h3 className="font-display text-lg mb-2 text-neutral-400">Loading Map...</h3></div>}>
+            <LazyMap 
+              stores={filteredStores} 
+              activeStoreId={activeStoreId} 
+              onStoreSelect={setActiveStoreId}
+              className="rounded-2xl"
+            />
+          </Suspense>
         </div>
 
         {/* List Side (Bottom on Mobile, Left on Desktop) */}
