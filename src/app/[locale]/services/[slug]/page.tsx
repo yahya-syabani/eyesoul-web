@@ -7,6 +7,8 @@ import { RichText } from "@/components/ui/RichText";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Clock, Tag, MessageCircle, ArrowLeft } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { PageHero } from "@/components/ui/PageHero";
+import { getMediaUrl } from "@/lib/utils/media";
 import Link from "next/link";
 
 export async function generateMetadata({
@@ -47,19 +49,33 @@ export default async function ServiceDetailsPage({
   const whatsappNumber = settings?.whatsapp || "6281234567890";
   const defaultCta = t('bookConsultation');
 
+  // Per-service hero images
+  const heroImages: Record<string, string> = {
+    'eye-examination': 'https://images.unsplash.com/photo-1559757175-5700dde675bc?q=80&w=2940&auto=format&fit=crop',
+    'repairs': 'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?q=80&w=2940&auto=format&fit=crop',
+    'home-service': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=2958&auto=format&fit=crop',
+    'corporate-service': 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2940&auto=format&fit=crop',
+  };
+  const heroUrl = getMediaUrl(service.heroImage) || getMediaUrl(service.coverImage) || heroImages[slug] || heroImages['eye-examination'];
+  const heroAlt = `${service.name} - Eyesoul Premium Eyewear`;
+
   return (
     <main className="flex-grow bg-background">
-      <div className="container mx-auto px-4 py-24 md:py-32 max-w-4xl">
+      <PageHero
+        title={service.name}
+        subtitle={service.duration ? `${service.duration} · ${service.pricing || ''}` : t('hero.subtitle')}
+        imageUrl={heroUrl}
+        imageAlt={heroAlt}
+        height="standard"
+        overlayOpacity={0.55}
+      />
+      <div className="container mx-auto px-4 py-16 md:py-24 max-w-4xl">
         
         <RevealOnScroll>
           <Link href={`/${locale}/services`} className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to {t('allServices')}
           </Link>
-          
-          <h1 className="font-display text-4xl md:text-5xl font-light mb-6 tracking-tight">
-            {service.name}
-          </h1>
           
           <div className="flex flex-wrap gap-4 mb-10">
             {service.duration && (

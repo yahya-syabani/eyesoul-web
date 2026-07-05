@@ -16,6 +16,7 @@ const staticRoutes = [
   "/store-locator",
   "/privacy",
   "/terms",
+  "/wishlist",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

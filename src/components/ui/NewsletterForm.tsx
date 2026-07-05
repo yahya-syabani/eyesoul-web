@@ -5,6 +5,8 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3000';
+
 export function NewsletterForm() {
   const t = useTranslations('newsletter');
   const [email, setEmail] = useState("");
@@ -15,10 +17,18 @@ export function NewsletterForm() {
     if (!email) return;
     setStatus("submitting");
 
-    // For MVP: simulate submission — no backend yet
-    // Future: POST to a newsletter API endpoint
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
+      const res = await fetch(`${CMS_URL}/api/newsletter-subscribers`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          source: 'web-footer',
+        }),
+      });
+
+      if (!res.ok) throw new Error('Failed to subscribe');
+
       setStatus("success");
       setEmail("");
     } catch {

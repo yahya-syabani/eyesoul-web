@@ -3,22 +3,25 @@
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
-import { Menu, Globe } from 'lucide-react';
-import { buttonVariants } from '@/components/ui/button';
+import { Menu, Globe, Heart } from 'lucide-react';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { useScroll, useMotionValueEvent } from 'framer-motion';
 import { useHoverIntent } from '@/lib/hooks/useHoverIntent';
 import { MegaMenu, MegaMenuTab } from './MegaMenu';
 import { MobileMenuDrawer } from './MobileMenuDrawer';
-import { Brand, EyewearCollection } from '@/lib/cms/types';
+import { SearchDialog } from '@/components/ui/SearchDialog';
+import { Brand, EyewearCollection, Service } from '@/lib/cms/types';
 import { Category } from '@/lib/cms/categories';
+import { DESKTOP_NAV_LINKS } from '@/lib/navigation';
 
 interface HeaderProps {
   brands?: Brand[];
   collections?: EyewearCollection[];
   categories?: Category[];
+  services?: Service[];
 }
 
-export function Header({ brands = [], collections = [], categories = [] }: HeaderProps) {
+export function Header({ brands = [], collections = [], categories = [], services = [] }: HeaderProps) {
   const t = useTranslations('Navigation');
   const tHeader = useTranslations('Header');
   const locale = useLocale();
@@ -74,38 +77,29 @@ export function Header({ brands = [], collections = [], categories = [] }: Heade
               </Button>
               
               <nav className={`hidden lg:flex gap-8 text-sm tracking-wide font-medium h-full items-center ${textColor}`}>
-                <div 
-                  className="h-full flex items-center cursor-pointer hover:opacity-70 transition-opacity"
-                  onMouseEnter={() => handleMouseEnter("eyewear")}
-                >
-                  Eyewear
-                </div>
-                <div 
-                  className="h-full flex items-center cursor-pointer hover:opacity-70 transition-opacity"
-                  onMouseEnter={() => handleMouseEnter("collections")}
-                >
-                  {t('collections')}
-                </div>
-                <div 
-                  className="h-full flex items-center cursor-pointer hover:opacity-70 transition-opacity"
-                  onMouseEnter={() => handleMouseEnter("brands")}
-                >
-                  {t('brands')}
-                </div>
-                <Link 
-                  href="/services" 
-                  className="h-full flex items-center hover:opacity-70 transition-opacity"
-                  onMouseEnter={() => handleMouseEnter(null)}
-                >
-                  {t('services')}
-                </Link>
-                <Link 
-                  href="/articles" 
-                  className="h-full flex items-center hover:opacity-70 transition-opacity"
-                  onMouseEnter={() => handleMouseEnter(null)}
-                >
-                  Journal
-                </Link>
+                {DESKTOP_NAV_LINKS.map((link) => {
+                  if (link.hasMegaMenu) {
+                    return (
+                      <div 
+                        key={link.id}
+                        className="h-full flex items-center cursor-pointer hover:opacity-70 transition-opacity"
+                        onMouseEnter={() => handleMouseEnter(link.id as MegaMenuTab)}
+                      >
+                        {t(link.labelKey.replace('Navigation.', ''))}
+                      </div>
+                    );
+                  }
+                  return (
+                    <Link 
+                      key={link.id}
+                      href={link.href!} 
+                      className="h-full flex items-center hover:opacity-70 transition-opacity"
+                      onMouseEnter={() => handleMouseEnter(null)}
+                    >
+                      {t(link.labelKey.replace('Navigation.', ''))}
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
 
@@ -124,6 +118,15 @@ export function Header({ brands = [], collections = [], categories = [] }: Heade
 
             {/* Right: Utilities */}
             <div className={`flex items-center justify-end gap-4 flex-1 ${textColor}`}>
+              <SearchDialog />
+              <Link 
+                href="/wishlist" 
+                className="flex items-center gap-1 text-sm font-medium hover:opacity-70 transition-opacity px-2 py-2"
+                aria-label={t('wishlist')}
+                onClick={() => handleMouseEnter(null)}
+              >
+                <Heart className="h-4 w-4 stroke-[1.5]" />
+              </Link>
               <Link href={pathname} locale={toggleLocale} className="flex items-center gap-2 text-sm font-medium hover:opacity-70 transition-opacity px-2 py-2">
                 <Globe className="h-4 w-4 stroke-[1.5]" />
                 <span className="uppercase text-xs tracking-wider">{locale}</span>
@@ -147,6 +150,7 @@ export function Header({ brands = [], collections = [], categories = [] }: Heade
               brands={brands}
               collections={collections}
               categories={categories}
+              services={services}
             />
           </div>
         </div>
@@ -155,10 +159,7 @@ export function Header({ brands = [], collections = [], categories = [] }: Heade
       {/* Mobile Drawer */}
       <MobileMenuDrawer 
         isOpen={mobileMenuOpen} 
-        onClose={() => setMobileMenuOpen(false)} 
-        brands={brands}
-        collections={collections}
-        categories={categories}
+        onClose={() => setMobileMenuOpen(false)}
       />
     </>
   );

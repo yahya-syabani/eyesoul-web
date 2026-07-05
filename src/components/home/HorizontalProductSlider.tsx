@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
 import { Product } from "@/lib/cms/types";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
@@ -16,9 +17,12 @@ interface HorizontalProductSliderProps {
 
 export function HorizontalProductSlider({ 
   products, 
-  title = "Iconic Frames", 
-  subtitle = "Our most sought-after designs." 
+  title, 
+  subtitle 
 }: HorizontalProductSliderProps) {
+  const t = useTranslations('home');
+  const displayTitle = title || t('featuredProducts.title');
+  const displaySubtitle = subtitle || t('featuredProducts.subtitle');
   const sliderRef = useRef<HTMLDivElement>(null);
 
   if (products.length === 0) return null;
@@ -42,11 +46,11 @@ export function HorizontalProductSlider({
         <RevealOnScroll className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
             <AnimatedText 
-              text={title}
+              text={displayTitle}
               el="h2"
               className="font-display text-4xl md:text-5xl font-light mb-4 tracking-tight"
             />
-            <p className="text-muted-foreground">{subtitle}</p>
+            <p className="text-muted-foreground">{displaySubtitle}</p>
           </div>
           
           <div className="flex items-center gap-6">

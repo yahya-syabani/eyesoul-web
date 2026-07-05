@@ -6,14 +6,20 @@
     "menu": "Menu"
   },
   "Navigation": {
+    "eyewear": "Eyewear",
+    "optical": "Optical",
+    "sunglasses": "Sunglasses",
+    "discover": "Discover",
     "products": "Products",
     "brands": "Brands",
     "collections": "Collections",
     "services": "Services",
     "articles": "Articles",
+    "journal": "Journal",
     "faq": "FAQ",
     "stores": "Store Locator",
-    "contact": "Contact"
+    "contact": "Contact",
+    "wishlist": "Wishlist"
   },
   "Common": {
     "loading": "Loading...",
@@ -108,7 +114,34 @@
       "meta": {
         "title": "Contact Us - Eyesoul Premium Eyewear",
         "description": "Get in touch with the Eyesoul team for support, consultation, or to book an appointment."
+      },
+      "form": {
+        "heading": "Send a Message",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email Address",
+        "subject": "Subject",
+        "message": "Message",
+        "submit": "Send Inquiry",
+        "subjectOptions": {
+          "general": "General Inquiry",
+          "order": "Order Support",
+          "exam": "Eye Examination",
+          "repairs": "Repairs & Warranty"
+        }
+      },
+      "description": "Whether you have a question about our collections, need help with an order, or want to book an eye examination, our concierge team is here to assist you."
+    },
+    "faq": {
+      "hero": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "Everything you need to know about our products, services, and policies."
       }
+    },
+    "notFound": {
+      "title": "404",
+      "body": "The page you're looking for doesn't exist or has been moved.",
+      "backToHome": "Back to Home"
     }
   },
   "home": {
@@ -136,6 +169,18 @@
       "title": "Curated Collections",
       "body": "Discover eyewear curated by aesthetic, material, and lifestyle. Each collection represents a unique approach to modern optical design.",
       "explore": "Explore All"
+    },
+    "services": {
+      "title": "Bespoke Services",
+      "explore": "Explore Services",
+      "exploreAll": "Explore All Services"
+    },
+    "testimonials": {
+      "title": "Client Experiences"
+    },
+    "featuredProducts": {
+      "title": "Iconic Frames",
+      "subtitle": "Our most sought-after designs."
     },
     "journal": {
       "title": "The Journal",

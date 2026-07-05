@@ -3,30 +3,22 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "@/i18n/routing";
 import { X, MapPin } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import { Brand, EyewearCollection } from '@/lib/cms/types';
-import { Category } from '@/lib/cms/categories';
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useTranslations } from 'next-intl';
+import { MOBILE_NAV_LINKS } from '@/lib/navigation';
 
 interface MobileMenuDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  brands?: Brand[];
-  collections?: EyewearCollection[];
-  categories?: Category[];
 }
 
-export function MobileMenuDrawer({ isOpen, onClose, brands = [], collections = [], categories = [] }: MobileMenuDrawerProps) {
+export function MobileMenuDrawer({ isOpen, onClose }: MobileMenuDrawerProps) {
   const t = useTranslations('Navigation');
   
-  const links = [
-    { label: "Optical", href: "/products?category=frames" },
-    { label: "Sunglasses", href: "/products?category=sunglasses" },
-    { label: t('collections'), href: "/collections" },
-    { label: t('brands'), href: "/brands" },
-    { label: t('services'), href: "/services" },
-    { label: "Journal", href: "/articles" },
-  ];
+  const links = MOBILE_NAV_LINKS.map(link => ({
+    label: t(link.labelKey.replace('Navigation.', '')),
+    href: link.href,
+  }));
 
   return (
     <AnimatePresence>

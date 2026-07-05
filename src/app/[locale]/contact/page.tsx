@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from 'next-intl/server';
 import { PageHero } from "@/components/ui/PageHero";
+import { ContactFormClient } from "@/components/ui/ContactFormClient";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -43,7 +44,7 @@ export default async function ContactPage({
           <div>
             <RevealOnScroll>
               <p className="text-muted-foreground text-lg mb-12 max-w-md leading-relaxed">
-                Whether you have a question about our collections, need help with an order, or want to book an eye examination, our concierge team is here to assist you.
+                {t('description')}
               </p>
             </RevealOnScroll>
 
@@ -99,69 +100,7 @@ export default async function ContactPage({
           {/* Right Column: Form */}
           <div>
             <RevealOnScroll delay={0.2}>
-              <div className="bg-neutral-50 p-8 md:p-12 rounded-2xl border border-neutral-100">
-                <h3 className="font-display text-2xl font-medium mb-6">Send a Message</h3>
-                <form className="space-y-6">
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label htmlFor="firstName" className="text-xs font-medium uppercase tracking-wider text-neutral-500">First Name</label>
-                      <input 
-                        type="text" 
-                        id="firstName" 
-                        className="w-full bg-transparent border-0 border-b border-neutral-300 px-0 py-3 focus:outline-none focus:ring-0 focus:border-primary transition-colors"
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="lastName" className="text-xs font-medium uppercase tracking-wider text-neutral-500">Last Name</label>
-                      <input 
-                        type="text" 
-                        id="lastName" 
-                        className="w-full bg-transparent border-0 border-b border-neutral-300 px-0 py-3 focus:outline-none focus:ring-0 focus:border-primary transition-colors"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-xs font-medium uppercase tracking-wider text-neutral-500">Email Address</label>
-                    <input 
-                      type="email" 
-                      id="email" 
-                      className="w-full bg-transparent border-0 border-b border-neutral-300 px-0 py-3 focus:outline-none focus:ring-0 focus:border-primary transition-colors"
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="subject" className="text-xs font-medium uppercase tracking-wider text-neutral-500">Subject</label>
-                    <select 
-                      id="subject" 
-                      className="w-full bg-transparent border-0 border-b border-neutral-300 px-0 py-3 focus:outline-none focus:ring-0 focus:border-primary transition-colors"
-                    >
-                      <option>General Inquiry</option>
-                      <option>Order Support</option>
-                      <option>Eye Examination</option>
-                      <option>Repairs & Warranty</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2 pt-2">
-                    <label htmlFor="message" className="text-xs font-medium uppercase tracking-wider text-neutral-500">Message</label>
-                    <textarea 
-                      id="message" 
-                      rows={4}
-                      className="w-full bg-transparent border-0 border-b border-neutral-300 px-0 py-3 focus:outline-none focus:ring-0 focus:border-primary transition-colors resize-none"
-                      required
-                    ></textarea>
-                  </div>
-
-                  <Button type="submit" className="w-full h-12 text-sm uppercase tracking-widest mt-4">
-                    Send Inquiry
-                  </Button>
-                </form>
-              </div>
+              <ContactFormClient />
             </RevealOnScroll>
           </div>
 

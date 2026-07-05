@@ -18,7 +18,7 @@ export async function getStoreById(id: string | number, locale?: Locale): Promis
   try {
     const store = await fetchCMS<StoreLocation>(endpoint, { locale });
     return store;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

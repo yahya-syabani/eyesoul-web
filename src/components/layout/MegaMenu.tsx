@@ -3,10 +3,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "@/i18n/routing";
 import Image from "next/image";
-import { Brand, EyewearCollection } from '@/lib/cms/types';
+import { Brand, EyewearCollection, Service } from '@/lib/cms/types';
 import { Category } from '@/lib/cms/categories';
 
-export type MegaMenuTab = "eyewear" | "collections" | "brands" | null;
+export type MegaMenuTab = "eyewear" | "collections" | "brands" | "services" | null;
 
 interface MegaMenuProps {
   activeTab: MegaMenuTab;
@@ -15,6 +15,7 @@ interface MegaMenuProps {
   brands?: Brand[];
   collections?: EyewearCollection[];
   categories?: Category[];
+  services?: Service[];
 }
 
 const containerVariants = {
@@ -44,7 +45,14 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] } }
 };
 
-export function MegaMenu({ activeTab, onMouseEnter, onMouseLeave, brands = [], collections = [] }: MegaMenuProps) {
+const getImageUrl = (url?: string) => {
+  if (!url) return "/campaign-fallback.svg";
+  if (url.startsWith("http") || url.startsWith("data:")) return url;
+  const baseUrl = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3000';
+  return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+};
+
+export function MegaMenu({ activeTab, onMouseEnter, onMouseLeave, brands = [], collections = [], services = [] }: MegaMenuProps) {
 
 
   const tabContents = {
@@ -100,7 +108,7 @@ export function MegaMenu({ activeTab, onMouseEnter, onMouseLeave, brands = [], c
         }
       ],
       campaign: {
-        image: collections[0]?.coverImage && typeof collections[0].coverImage === 'object' ? collections[0].coverImage.url : "/campaign-fallback.svg",
+        image: collections[0]?.coverImage && typeof collections[0].coverImage === 'object' ? getImageUrl(collections[0].coverImage.url) : "/campaign-fallback.svg",
         title: collections[0]?.name || "New Collection",
         subtitle: "Featured",
         link: collections[0] ? `/collections/${collections[0].slug}` : "/collections",
@@ -124,11 +132,35 @@ export function MegaMenu({ activeTab, onMouseEnter, onMouseLeave, brands = [], c
         }
       ],
       campaign: {
-        image: "/campaign-fallback.svg",
+        image: brands[0]?.coverImage && typeof brands[0].coverImage === 'object' ? getImageUrl(brands[0].coverImage.url) : "/campaign-fallback.svg",
         title: brands[0]?.name || "Featured Brand",
         subtitle: "Partner",
         link: brands[0] ? `/brands/${brands[0].slug}` : "/brands",
         linkText: "Shop Now"
+      }
+    },
+    services: {
+      columns: [
+        {
+          title: "Featured",
+          links: services.slice(0, 5).map(s => ({
+            label: s.name,
+            href: `/services/${s.slug}`
+          }))
+        },
+        {
+          title: "Discover",
+          links: [
+            { label: "View All Services", href: "/services", highlight: true },
+          ]
+        }
+      ],
+      campaign: {
+        image: services[0]?.coverImage && typeof services[0].coverImage === 'object' ? getImageUrl(services[0].coverImage.url) : "/campaign-fallback.svg",
+        title: services[0]?.name || "Our Services",
+        subtitle: "Professional Care",
+        link: services[0] ? `/services/${services[0].slug}` : "/services",
+        linkText: "Learn More"
       }
     }
   };

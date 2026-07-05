@@ -5,9 +5,14 @@ import { CMSResponse, Service, Locale } from './types';
  * Fetches a list of optical services.
  */
 export async function getServices(locale?: Locale): Promise<Service[]> {
-  const endpoint = `/services?limit=100`;
-  const response = await fetchCMS<CMSResponse<Service>>(endpoint, { locale });
-  return response.docs || [];
+  try {
+    const endpoint = `/services?limit=100`;
+    const response = await fetchCMS<CMSResponse<Service>>(endpoint, { locale });
+    return response.docs || [];
+  } catch (error) {
+    console.warn('Failed to fetch services:', error);
+    return [];
+  }
 }
 
 /**

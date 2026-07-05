@@ -3,9 +3,9 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { MapPin, Mail, Phone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { SiteSettings } from '@/lib/cms/types';
 import { NewsletterForm } from '@/components/ui/NewsletterForm';
+import { FOOTER_SHOP_LINKS, FOOTER_SUPPORT_LINKS } from '@/lib/navigation';
 
 interface FooterProps {
   siteSettings?: SiteSettings | null;
@@ -71,9 +71,11 @@ export function Footer({ siteSettings }: FooterProps) {
           <div className="flex flex-col space-y-4">
             <h4 className="font-display font-medium text-xs tracking-[0.2em] uppercase text-white mb-4">{f('shop')}</h4>
             <nav className="flex flex-col space-y-3 text-sm text-neutral-400">
-              <Link href="/products?category=frames" className="hover:text-white transition-colors">{f('links.optical')}</Link>
-              <Link href="/products?category=sunglasses" className="hover:text-white transition-colors">{f('links.sunglasses')}</Link>
-              <Link href="/collections" className="hover:text-white transition-colors">All {t('collections')}</Link>
+              {FOOTER_SHOP_LINKS.map((link) => (
+                <Link key={link.href} href={link.href} className="hover:text-white transition-colors">
+                  {link.labelKey.startsWith('footer.') ? f(link.labelKey.replace('footer.', '')) : t(link.labelKey.replace('Navigation.', ''))}
+                </Link>
+              ))}
             </nav>
           </div>
 
@@ -81,10 +83,11 @@ export function Footer({ siteSettings }: FooterProps) {
           <div className="flex flex-col space-y-4">
             <h4 className="font-display font-medium text-xs tracking-[0.2em] uppercase text-white mb-4">{f('support')}</h4>
             <nav className="flex flex-col space-y-3 text-sm text-neutral-400">
-              <Link href="/faq" className="hover:text-white transition-colors">{t('faq')}</Link>
-              <Link href="/services/repairs" className="hover:text-white transition-colors">{f('links.repairs')}</Link>
-              <Link href="/contact" className="hover:text-white transition-colors">{t('contact')}</Link>
-              <Link href="/store-locator" className="hover:text-white transition-colors">{t('stores')}</Link>
+              {FOOTER_SUPPORT_LINKS.map((link) => (
+                <Link key={link.href} href={link.href} className="hover:text-white transition-colors">
+                  {link.labelKey.startsWith('footer.') ? f(link.labelKey.replace('footer.', '')) : t(link.labelKey.replace('Navigation.', ''))}
+                </Link>
+              ))}
             </nav>
           </div>
 

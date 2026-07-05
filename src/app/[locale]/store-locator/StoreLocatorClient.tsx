@@ -5,8 +5,7 @@ import { StoreLocation } from "@/lib/cms/types";
 import { StoreMap } from "@/components/ui/StoreMap";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
-import { MapPin, Navigation, Phone, MessageCircle, Clock, Search, Locate, ChevronRight } from "lucide-react";
-import Link from "next/link";
+import { MapPin, Navigation, Phone, MessageCircle, Clock, Search, Locate } from "lucide-react";
 
 interface StoreLocatorClientProps {
   stores: StoreLocation[];
@@ -56,9 +55,40 @@ export function StoreLocatorClient({ stores }: StoreLocatorClientProps) {
           <button 
             className="h-14 px-6 border border-neutral-300 rounded-xl text-neutral-600 hover:bg-neutral-50 transition-colors shadow-sm flex items-center justify-center gap-2 font-medium w-full sm:w-auto bg-white" 
             aria-label="Use my location"
-            onClick={() => alert("Geolocation feature coming soon!")}
+            onClick={() => {
+              if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser.");
+                return;
+              }
+              const btn = document.activeElement as HTMLButtonElement;
+              btn.disabled = true;
+              btn.innerHTML = '<span className="animate-spin">⌛</span> Locating...';
+              navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                  // Center map on user's location by dispatching a custom event
+                  window.dispatchEvent(new CustomEvent('geolocate', { 
+                    detail: { lat: pos.coords.latitude, lng: pos.coords.longitude }
+                  }));
+                  btn.disabled = false;
+                  btn.innerHTML = '<span>📍 Located!</span>';
+                  setTimeout(() => {
+                    btn.innerHTML = '<Locate className="w-5 h-5" /><span className="sm:hidden">Use Current Location</span>';
+                  }, 2000);
+                },
+                (err) => {
+                  const messages: Record<number, string> = {
+                    [err.PERMISSION_DENIED]: "Location access was denied. Please enable location in your browser settings.",
+                    [err.POSITION_UNAVAILABLE]: "Location information is unavailable.",
+                    [err.TIMEOUT]: "The request to get your location timed out.",
+                  };
+                  alert(messages[err.code] || "An unknown error occurred.");
+                  btn.disabled = false;
+                  btn.innerHTML = '<span>📍 Try Again</span>';
+                },
+                { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+              );
+            }}
           >
-            <Locate className="w-5 h-5" />
             <span className="sm:hidden">Use Current Location</span>
           </button>
         </div>
@@ -159,7 +189,7 @@ export function StoreLocatorClient({ stores }: StoreLocatorClientProps) {
             <div className="p-12 text-center border-2 border-dashed border-neutral-200 rounded-2xl bg-neutral-50 flex flex-col items-center">
               <Search className="w-12 h-12 text-neutral-300 mb-4" />
               <h3 className="font-display text-lg mb-2">No stores found</h3>
-              <p className="text-muted-foreground text-sm">We couldn't find any locations matching "{searchQuery}".</p>
+              <p className="text-muted-foreground text-sm">{`We couldn't find any locations matching "${searchQuery}".`}</p>
               <button 
                 onClick={() => setSearchQuery("")}
                 className="mt-4 text-sm font-medium text-primary hover:underline"

@@ -12,6 +12,7 @@ import { getSiteSettings } from "@/lib/cms/settings";
 import { getBrands } from "@/lib/cms/brands";
 import { getCollections } from "@/lib/cms/collections";
 import { getCategories } from "@/lib/cms/categories";
+import { getServices } from "@/lib/cms/services";
 import { Locale } from "@/lib/cms/types";
 import "../globals.css";
 
@@ -64,12 +65,13 @@ export default async function RootLayout({
 
   const messages = await getMessages();
 
-  const [siteBanner, siteSettings, brands, collections, categories] = await Promise.all([
+  const [siteBanner, siteSettings, brands, collections, categories, services] = await Promise.all([
     getSiteBanner(locale as Locale),
     getSiteSettings(locale as Locale),
     getBrands(locale as Locale),
     getCollections(locale as Locale),
-    getCategories(locale as Locale)
+    getCategories(locale as Locale),
+    getServices(locale as Locale)
   ]);
 
   const bannerEnabled = siteBanner?.enabled !== false;
@@ -93,7 +95,7 @@ export default async function RootLayout({
             link={siteBanner?.link}
             linkLabel={siteBanner?.linkLabel}
           />
-          <Header brands={brands} collections={collections} categories={categories} />
+          <Header brands={brands} collections={collections} categories={categories} services={services} />
           <div id="main-content" className="flex-1 flex flex-col w-full relative">
             {children}
           </div>

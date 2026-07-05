@@ -6,14 +6,20 @@
     "menu": "Menu"
   },
   "Navigation": {
+    "eyewear": "Kacamata",
+    "optical": "Optik",
+    "sunglasses": "Kacamata Hitam",
+    "discover": "Jelajahi",
     "products": "Produk",
     "brands": "Merek",
     "collections": "Koleksi",
     "services": "Layanan",
     "articles": "Artikel",
+    "journal": "Jurnal",
     "faq": "FAQ",
     "stores": "Lokasi Toko",
-    "contact": "Kontak"
+    "contact": "Kontak",
+    "wishlist": "Daftar Keinginan"
   },
   "Common": {
     "loading": "Memuat...",
@@ -108,7 +114,34 @@
       "meta": {
         "title": "Hubungi Kami - Eyesoul Premium Eyewear",
         "description": "Hubungi tim Eyesoul untuk dukungan, konsultasi, atau untuk membuat janji temu."
+      },
+      "form": {
+        "heading": "Kirim Pesan",
+        "firstName": "Nama Depan",
+        "lastName": "Nama Belakang",
+        "email": "Alamat Email",
+        "subject": "Subjek",
+        "message": "Pesan",
+        "submit": "Kirim Pertanyaan",
+        "subjectOptions": {
+          "general": "Pertanyaan Umum",
+          "order": "Bantuan Pesanan",
+          "exam": "Pemeriksaan Mata",
+          "repairs": "Perbaikan & Garansi"
+        }
+      },
+      "description": "Apakah Anda memiliki pertanyaan tentang koleksi kami, membutuhkan bantuan dengan pesanan, atau ingin membuat janji pemeriksaan mata, tim concierge kami siap membantu Anda."
+    },
+    "faq": {
+      "hero": {
+        "title": "Pertanyaan yang Sering Diajukan",
+        "subtitle": "Semua yang perlu Anda ketahui tentang produk, layanan, dan kebijakan kami."
       }
+    },
+    "notFound": {
+      "title": "404",
+      "body": "Halaman yang Anda cari tidak ada atau telah dipindahkan.",
+      "backToHome": "Kembali ke Beranda"
     }
   },
   "home": {
@@ -136,6 +169,18 @@
       "title": "Koleksi Kurasi",
       "body": "Temukan kacamata yang dikurasi berdasarkan estetika, material, dan gaya hidup. Setiap koleksi mewakili pendekatan unik terhadap desain optik modern.",
       "explore": "Jelajahi Semua"
+    },
+    "services": {
+      "title": "Layanan Khusus",
+      "explore": "Jelajahi Layanan",
+      "exploreAll": "Jelajahi Semua Layanan"
+    },
+    "testimonials": {
+      "title": "Pengalaman Klien"
+    },
+    "featuredProducts": {
+      "title": "Bingkai Ikonik",
+      "subtitle": "Desain paling dicari kami."
     },
     "journal": {
       "title": "Jurnal",

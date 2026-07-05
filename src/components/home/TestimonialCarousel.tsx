@@ -1,7 +1,8 @@
 "use client";
 
+import { useTranslations } from 'next-intl';
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, Star, BadgeCheck } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, BadgeCheck, Quote } from "lucide-react";
 import { Testimonial } from "@/lib/cms/types";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -10,150 +11,169 @@ interface TestimonialCarouselProps {
 }
 
 export function TestimonialCarousel({ testimonials }: TestimonialCarouselProps) {
-  const [current, setCurrent] = useState(0);
-  const length = testimonials.length;
+  const homeT = useTranslations('home');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
 
-  if (length === 0) return null;
+  if (!testimonials || testimonials.length === 0) return null;
 
-  const t = testimonials[current];
-  const avatarUrl = t.avatar && typeof t.avatar === "object" ? t.avatar.url : null;
+  const handleNext = () => {
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 800 : -800,
+      opacity: 0,
+      scale: 0.9,
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 800 : -800,
+      opacity: 0,
+      scale: 0.9,
+    }),
+  };
+
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
 
   return (
-    <section className="py-24 md:py-32 bg-[#F9F9F9]">
-      <div className="container mx-auto px-6 md:px-12 lg:px-20">
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
-          
-          {/* Left Column: Title & Controls */}
-          <div className="w-full lg:w-1/3 flex flex-col justify-between">
-            <div>
-              <p className="text-muted-foreground uppercase tracking-widest text-xs font-semibold mb-6">
-                Client Experiences
-              </p>
-              <h2 className="font-display text-4xl md:text-5xl font-light mb-8 tracking-tight">
-                The Eyesoul<br className="hidden lg:block" /> Experience
-              </h2>
-            </div>
-            
-            {/* Navigation Controls (Fixed placement so they don't jump) */}
-            {length > 1 && (
-              <div className="hidden lg:flex items-center gap-6 mt-12">
-                <button
-                  onClick={() => setCurrent((current - 1 + length) % length)}
-                  className="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-900 hover:border-neutral-900 hover:text-white transition-all group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                  aria-label="Previous testimonial"
-                >
-                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-                </button>
-                <div className="flex gap-2">
-                  {testimonials.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrent(index)}
-                      className="group p-2"
-                      aria-label={`Go to testimonial ${index + 1}`}
-                    >
-                      <div className={`h-1 transition-all duration-300 rounded-full ${index === current ? "w-8 bg-neutral-900" : "w-2 bg-neutral-300 group-hover:bg-neutral-400"}`} />
-                    </button>
+    <section className="py-24 md:py-32 bg-neutral-950 text-white overflow-hidden relative selection:bg-white/20">
+      {/* Background ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-neutral-800/40 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-16 md:mb-24">
+          <p className="text-neutral-400 uppercase tracking-widest text-xs font-semibold mb-6">
+            {homeT('testimonials.title')}
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light tracking-tight">
+            The Eyesoul Experience
+          </h2>
+        </div>
+
+        <div className="max-w-4xl mx-auto relative h-[450px] md:h-[400px]">
+          <AnimatePresence initial={false} custom={direction} mode="wait">
+            <motion.div
+              key={currentIndex}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 },
+              }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={1}
+              onDragEnd={(e, { offset, velocity }) => {
+                const swipe = swipePower(offset.x, velocity.x);
+                if (swipe < -swipeConfidenceThreshold) {
+                  handleNext();
+                } else if (swipe > swipeConfidenceThreshold) {
+                  handlePrev();
+                }
+              }}
+              className="absolute inset-0 w-full h-full flex flex-col items-center justify-center cursor-grab active:cursor-grabbing"
+            >
+              {/* Card Content */}
+              <div className="w-full h-full p-8 md:p-14 bg-white/[0.03] border border-white/10 backdrop-blur-2xl rounded-[2.5rem] flex flex-col items-center justify-between text-center relative shadow-2xl">
+                <Quote className="absolute top-8 left-8 w-12 h-12 text-white/5 rotate-180 pointer-events-none" />
+                <Quote className="absolute bottom-8 right-8 w-12 h-12 text-white/5 pointer-events-none" />
+
+                <div className="flex items-center gap-1.5 mb-8">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-5 h-5 ${i < testimonials[currentIndex].rating ? "text-amber-400 fill-amber-400" : "text-neutral-700"}`}
+                    />
                   ))}
                 </div>
-                <button
-                  onClick={() => setCurrent((current + 1) % length)}
-                  className="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-900 hover:border-neutral-900 hover:text-white transition-all group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                  aria-label="Next testimonial"
-                >
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-                </button>
-              </div>
-            )}
-          </div>
 
-          {/* Right Column: Sliding Reviews */}
-          <div className="w-full lg:w-2/3 relative min-h-[400px] lg:min-h-[350px]">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={current}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6, ease: [0.25, 0.25, 0, 1] }}
-                className="absolute inset-0 flex flex-col"
-              >
-                {/* Large elegant quote */}
-                <blockquote className="font-display text-2xl md:text-3xl lg:text-4xl text-neutral-900 font-light leading-snug tracking-tight mb-12">
-                  &ldquo;{t.quote}&rdquo;
+                <blockquote className="font-display text-2xl md:text-3xl lg:text-4xl font-light leading-snug tracking-tight mb-10 text-neutral-100">
+                  &ldquo;{testimonials[currentIndex].quote}&rdquo;
                 </blockquote>
 
-                {/* Metadata Row */}
-                <div className="mt-auto flex flex-col sm:flex-row sm:items-center gap-6 pt-8 border-t border-neutral-200">
-                  <div className="flex items-center gap-4">
-                    {avatarUrl ? (
-                      <div className="relative w-14 h-14 rounded-full overflow-hidden bg-neutral-200 shrink-0">
-                        <img src={avatarUrl} alt={t.author} className="w-full h-full object-cover" />
-                      </div>
-                    ) : (
-                      <div className="relative w-14 h-14 rounded-full bg-neutral-200 flex items-center justify-center shrink-0">
-                        <span className="text-xl font-display text-neutral-500">{t.author.charAt(0)}</span>
-                      </div>
-                    )}
-                    
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        <p className="font-display font-medium text-lg text-neutral-900">{t.author}</p>
-                        <BadgeCheck className="w-4 h-4 text-blue-500" aria-label="Verified Customer" />
-                      </div>
-                      {t.company && (
-                        <p className="text-sm text-neutral-500">{t.company}</p>
-                      )}
+                <div className="flex flex-col items-center gap-4">
+                  {testimonials[currentIndex].avatar && typeof testimonials[currentIndex].avatar === "object" ? (
+                    <img
+                      src={testimonials[currentIndex].avatar.url}
+                      alt={testimonials[currentIndex].author}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-white/20 shadow-lg"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-neutral-800 flex items-center justify-center border-2 border-white/20 shadow-lg">
+                      <span className="text-xl font-display text-neutral-300">
+                        {testimonials[currentIndex].author.charAt(0)}
+                      </span>
                     </div>
-                  </div>
-
-                  {/* Stars (Pushed to right on desktop) */}
-                  <div className="sm:ml-auto flex items-center gap-1 bg-white px-4 py-2 rounded-full border border-neutral-200 shadow-sm">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${i < t.rating ? "text-amber-500 fill-amber-500" : "text-neutral-200"}`}
-                      />
-                    ))}
-                    <span className="text-sm font-medium text-neutral-700 ml-2">{t.rating}.0</span>
+                  )}
+                  
+                  <div>
+                    <div className="flex items-center justify-center gap-2">
+                      <p className="font-display font-medium text-lg text-white">{testimonials[currentIndex].author}</p>
+                      <BadgeCheck className="w-5 h-5 text-blue-400" aria-label="Verified Customer" />
+                    </div>
+                    {testimonials[currentIndex].company && (
+                      <p className="text-sm text-neutral-400 mt-1">{testimonials[currentIndex].company}</p>
+                    )}
                   </div>
                 </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-          
-          {/* Mobile Navigation Controls */}
-          {length > 1 && (
-            <div className="flex lg:hidden items-center justify-between mt-8 pt-6 border-t border-neutral-200">
-              <button
-                onClick={() => setCurrent((current - 1 + length) % length)}
-                className="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-100 transition-colors"
-                aria-label="Previous testimonial"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <div className="flex gap-1.5">
-                {testimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrent(index)}
-                    className="p-1"
-                    aria-label={`Go to testimonial ${index + 1}`}
-                  >
-                    <div className={`h-1.5 transition-all duration-300 rounded-full ${index === current ? "w-6 bg-neutral-900" : "w-1.5 bg-neutral-300"}`} />
-                  </button>
-                ))}
               </div>
-              <button
-                onClick={() => setCurrent((current + 1) % length)}
-                className="w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center hover:bg-neutral-100 transition-colors"
-                aria-label="Next testimonial"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-          )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
+        {/* Controls */}
+        <div className="flex items-center justify-center gap-8 mt-16">
+          <button
+            onClick={handlePrev}
+            className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-neutral-950"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
+          </button>
+          
+          <div className="flex gap-3">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setDirection(index > currentIndex ? 1 : -1);
+                  setCurrentIndex(index);
+                }}
+                className="group p-2 focus:outline-none"
+                aria-label={`Go to testimonial ${index + 1}`}
+              >
+                <div className={`h-1.5 transition-all duration-500 rounded-full ${index === currentIndex ? "w-10 bg-white" : "w-2 bg-white/20 group-hover:bg-white/40"}`} />
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={handleNext}
+            className="w-14 h-14 rounded-full border border-white/20 flex items-center justify-center hover:bg-white hover:text-black transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-neutral-950"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
+          </button>
         </div>
       </div>
     </section>

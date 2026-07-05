@@ -4,10 +4,12 @@ import { getProducts } from "@/lib/cms/products";
 import { getTestimonials } from "@/lib/cms/testimonials";
 import { getArticles } from "@/lib/cms/articles";
 import { getServices } from "@/lib/cms/services";
+import { getInsurancePartners } from "@/lib/cms/insurance-partners";
 import { getMediaUrl } from "@/lib/utils/media";
 import { getTranslations } from 'next-intl/server';
 import { Locale } from "@/lib/cms/types";
 import { EditorialHero } from "@/components/home/EditorialHero";
+import { PartnerGrid } from "@/components/ui/PartnerGrid";
 import { BrandBentoGrid } from "@/components/home/BrandBentoGrid";
 import { FeaturedCollections } from "@/components/home/FeaturedCollections";
 import { HorizontalProductSlider } from "@/components/home/HorizontalProductSlider";
@@ -31,13 +33,14 @@ export default async function HomePage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'home' });
 
-  const [banners, collections, productsRes, testimonials, articles, services] = await Promise.all([
+  const [banners, collections, productsRes, testimonials, articles, services, insurancePartners] = await Promise.all([
     getBanners(locale as Locale),
     getCollections(locale as Locale),
     getProducts({ locale: locale as Locale, limit: 8 }),
     getTestimonials(locale as Locale),
     getArticles(locale as Locale),
     getServices(locale as Locale),
+    getInsurancePartners(locale as Locale),
   ]);
 
   const featuredProducts = productsRes.docs.filter((p) => p.status?.featured).slice(0, 8);
@@ -47,6 +50,7 @@ export default async function HomePage({
     <main className="flex-grow bg-background">
       {/* 1. Hero (Editorial Split) */}
       <EditorialHero banners={banners} />
+
 
       {/* 2. The Craft (Bento Grid) */}
       <BrandBentoGrid />
@@ -66,6 +70,9 @@ export default async function HomePage({
 
       {/* 6. The Eyesoul Experience (Reviews) */}
       <TestimonialCarousel testimonials={testimonials} />
+
+      {/* Trust Bar: Insurance Partners */}
+      <PartnerGrid partners={insurancePartners} />
 
       {/* 7. The Journal */}
       {latestArticles.length > 0 && (

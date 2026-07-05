@@ -2,11 +2,16 @@ import { getFAQs } from "@/lib/cms/faq";
 import { Locale } from "@/lib/cms/types";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { Plus } from "lucide-react";
+import { getTranslations } from 'next-intl/server';
 
-export const metadata = {
-  title: "FAQ - Eyesoul Premium Eyewear",
-  description: "Frequently asked questions about our eyewear, services, and policies.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.faq' });
+  return {
+    title: `${t('hero.title')} - Eyesoul Premium Eyewear`,
+    description: t('hero.subtitle'),
+  };
+}
 
 export default async function FAQPage({
   params,
@@ -14,6 +19,7 @@ export default async function FAQPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'page.faq' });
   const faqs = await getFAQs(locale as Locale);
 
   const faqSchema = {
@@ -39,10 +45,10 @@ export default async function FAQPage({
       <div className="container mx-auto px-4 py-12 md:py-24 max-w-3xl">
         <RevealOnScroll className="mb-16 text-center">
           <h1 className="font-display text-4xl md:text-5xl font-light mb-4">
-            Frequently Asked Questions
+            {t('hero.title')}
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Everything you need to know about our products, services, and policies.
+            {t('hero.subtitle')}
           </p>
         </RevealOnScroll>
 

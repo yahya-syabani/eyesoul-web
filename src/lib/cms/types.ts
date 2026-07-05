@@ -33,6 +33,7 @@ export interface Product {
   collections?: number[] | EyewearCollection[];
   sku: string;
   description: any; // eslint-disable-line @typescript-eslint/no-explicit-any -- Lexical rich text
+  price?: number;
   specs?: {
     material?: string;
     shape?: string;
@@ -71,6 +72,7 @@ export interface Brand {
   story?: string;
   country?: string;
   designPhilosophy?: string;
+  coverImage?: number | Media;
 }
 
 export interface EyewearCollection {
@@ -108,6 +110,8 @@ export interface Service {
   duration?: string;
   pricing?: string;
   ctaLabel?: string;
+  coverImage?: number | Media;
+  heroImage?: number | Media;
 }
 
 export interface Article {
@@ -175,4 +179,12 @@ export interface SiteBannerSettings {
   message?: string;
   link?: string;
   linkLabel?: string;
+}
+
+export interface InsurancePartner {
+  id: number;
+  name: string;
+  logo: number | Media;
+  order?: number;
+  active?: boolean;
 }
