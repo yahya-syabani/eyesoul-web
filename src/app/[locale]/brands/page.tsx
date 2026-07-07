@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from 'next-intl/server';
 import { PageHero } from "@/components/ui/PageHero";
+import { getMediaUrl } from "@/lib/utils/media";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -35,12 +36,22 @@ export default async function BrandsPage({
 
         {brands.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {brands.map((brand, index) => (
+            {brands.map((brand, index) => {
+              const coverUrl = getMediaUrl(brand.coverImage);
+              return (
               <RevealOnScroll key={brand.id} delay={0.1 * index}>
                 <Link href={`/brands/${brand.slug}`} className="block group h-full">
                   <Card className="h-full overflow-hidden border-transparent shadow-sm hover:shadow-xl transition-all duration-300">
+                    {coverUrl && coverUrl !== "/placeholder.png" && (
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={coverUrl}
+                          alt={brand.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      </div>
+                    )}
                     <CardContent className="p-8 flex flex-col h-full bg-white relative">
-                      {/* For the MVP, text-only card since there is no logo field. */}
                       <div className="mb-auto">
                         <p className="text-xs text-muted-foreground uppercase tracking-widest mb-2 font-medium">
                           {brand.country || "Global"}
@@ -63,7 +74,7 @@ export default async function BrandsPage({
                   </Card>
                 </Link>
               </RevealOnScroll>
-            ))}
+            )})}
           </div>
         ) : (
           <div className="py-24 text-center border border-dashed rounded-xl border-neutral-300">
