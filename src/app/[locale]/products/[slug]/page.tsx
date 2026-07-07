@@ -138,11 +138,33 @@ export default async function ProductDetailPage({
               </div>
             )}
 
-            {/* Actions */}
-            <div className="mt-auto space-y-4">
+            {/* Actions — Desktop */}
+            <div className="mt-auto space-y-4 hidden lg:block">
               <BuyMarketplaceButton links={product.marketplaceLinks} />
             </div>
           </RevealOnScroll>
+
+          {/* Mobile Sticky CTA Bar */}
+          <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-white/95 backdrop-blur-xl border-t border-neutral-200 px-4 py-3 safe-bottom">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-muted-foreground truncate">{product.name}</p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                {product.marketplaceLinks?.filter((l: any) => l.inStock).slice(0, 2).map((link: any) => (
+                  <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center bg-neutral-900 text-white px-4 py-2 text-xs font-medium uppercase tracking-wide rounded-sm hover:bg-neutral-800 transition-colors">
+                    Buy {link.platform === 'tokopedia' ? 'Tokopedia' : link.platform === 'shopee' ? 'Shopee' : 'Now'}
+                  </a>
+                ))}
+                {(!product.marketplaceLinks || product.marketplaceLinks.length === 0) && (
+                  <a href="/contact" className="inline-flex items-center justify-center bg-neutral-900 text-white px-4 py-2 text-xs font-medium uppercase tracking-wide rounded-sm">
+                    Inquire
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>

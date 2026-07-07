@@ -160,6 +160,10 @@ export function Header({ brands = [], collections = [], categories = [], service
       <MobileMenuDrawer 
         isOpen={mobileMenuOpen} 
         onClose={() => setMobileMenuOpen(false)}
+        brands={brands}
+        collections={collections}
+        categories={categories}
+        services={services}
       />
     </>
   );

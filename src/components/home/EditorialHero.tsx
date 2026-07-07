@@ -16,10 +16,10 @@ export function EditorialHero({ banners }: EditorialHeroProps) {
   const imageUrl = typeof banner.image === "object" ? banner.image.url : "";
 
   return (
-    <section className="relative w-full min-h-[100vh] lg:min-h-[95vh] bg-neutral-950 -mt-[96px] lg:-mt-[128px] flex items-end lg:items-center overflow-hidden">
+    <section className="relative w-full min-h-[85vh] lg:min-h-[95vh] bg-neutral-950 -mt-[96px] lg:-mt-[128px] flex items-end lg:items-center overflow-hidden">
       
       {/* --- MEDIA LAYER (Background / Right Side) --- */}
-      <div className="absolute inset-0 lg:left-[35%] z-0 h-[65vh] lg:h-full top-0">
+      <div className="absolute inset-0 lg:left-[35%] z-0 h-[45vh] lg:h-full top-0">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -94,7 +94,7 @@ export function EditorialHero({ banners }: EditorialHeroProps) {
           )}
           
           {/* Massive Headline */}
-          <h1 className="font-display text-[3.5rem] leading-[1.05] md:text-7xl lg:text-[5.5rem] font-light text-white mb-6 tracking-tight drop-shadow-sm">
+          <h1 className="font-display text-4xl sm:text-5xl leading-[1.05] md:text-7xl lg:text-[5.5rem] font-light text-white mb-6 tracking-tight drop-shadow-sm">
             {banner.title || "The Premium Catalogue"}
           </h1>
           
