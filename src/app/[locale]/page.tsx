@@ -136,7 +136,7 @@ export default async function HomePage({
       <section className="relative py-24 md:py-32 overflow-hidden bg-neutral-900 flex items-center justify-center text-center">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/campaign-fallback.svg"
+            src="https://cdn.ruparupa.io/fit-in/1200x800/filters:format(webp)/filters:quality(90)/ruparupa-com/image/upload/Products/10520815_1.jpg"
             alt="Showroom"
             fill
             sizes="100vw"

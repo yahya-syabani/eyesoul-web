@@ -25,7 +25,7 @@ export function BrandBentoGrid() {
           {/* Main Bento Box */}
           <RevealOnScroll delay={0.1} className="md:col-span-2 relative aspect-square md:aspect-auto md:h-[400px] rounded-3xl overflow-hidden bg-neutral-100 group">
             <Image 
-              src="/campaign-fallback.svg" 
+              src="https://cdn.ruparupa.io/fit-in/800x600/filters:format(webp)/filters:quality(90)/ruparupa-com/image/upload/Products/10520815_1.jpg" 
               alt="Craftsmanship" 
               fill 
               className="object-cover group-hover:scale-105 transition-transform duration-1000"
@@ -62,7 +62,7 @@ export function BrandBentoGrid() {
           {/* Bottom Right Wide Box */}
           <RevealOnScroll delay={0.4} className="md:col-span-2 relative h-[300px] rounded-3xl overflow-hidden bg-neutral-900 group">
              <Image 
-              src="/brand-fallback.svg" 
+              src="https://cdn.ruparupa.io/fit-in/800x600/filters:format(webp)/filters:quality(90)/ruparupa-com/image/upload/Products/10495205_1.jpg" 
               alt="Optical Lenses" 
               fill 
               className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-1000"
