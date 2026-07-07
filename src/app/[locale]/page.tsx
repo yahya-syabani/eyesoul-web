@@ -140,6 +140,7 @@ export default async function HomePage({
             alt="Showroom"
             fill
             sizes="100vw"
+            unoptimized
             className="object-cover opacity-60"
           />
         </div>

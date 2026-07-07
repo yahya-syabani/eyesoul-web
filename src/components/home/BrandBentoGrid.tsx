@@ -28,6 +28,7 @@ export function BrandBentoGrid() {
               src="https://cdn.ruparupa.io/fit-in/800x600/filters:format(webp)/filters:quality(90)/ruparupa-com/image/upload/Products/10520815_1.jpg" 
               alt="Craftsmanship" 
               fill 
+              unoptimized
               className="object-cover group-hover:scale-105 transition-transform duration-1000"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8">
@@ -65,6 +66,7 @@ export function BrandBentoGrid() {
               src="https://cdn.ruparupa.io/fit-in/800x600/filters:format(webp)/filters:quality(90)/ruparupa-com/image/upload/Products/10495205_1.jpg" 
               alt="Optical Lenses" 
               fill 
+              unoptimized
               className="object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-1000"
             />
             <div className="absolute inset-0 flex flex-col justify-end p-8">
