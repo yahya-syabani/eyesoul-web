@@ -7,12 +7,7 @@ import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SiteBanner } from "@/components/home/SiteBanner";
-import { getSiteBanner } from "@/lib/cms/settings";
-import { getSiteSettings } from "@/lib/cms/settings";
-import { getBrands } from "@/lib/cms/brands";
-import { getCollections } from "@/lib/cms/collections";
-import { getCategories } from "@/lib/cms/categories";
-import { getServices } from "@/lib/cms/services";
+import { getSiteBanner, getSiteSettings } from "@/lib/cms/settings";
 import { Locale } from "@/lib/cms/types";
 import "../globals.css";
 
@@ -58,20 +53,16 @@ export default async function RootLayout({
 }>) {
   const { locale } = await params;
   
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   if (!routing.locales.includes(locale as any)) {
     notFound();
   }
 
   const messages = await getMessages();
 
-  const [siteBanner, siteSettings, brands, collections, categories, services] = await Promise.all([
+  // Critical: only fetch what's needed for first paint (banner + footer settings)
+  const [siteBanner, siteSettings] = await Promise.all([
     getSiteBanner(locale as Locale),
     getSiteSettings(locale as Locale),
-    getBrands(locale as Locale),
-    getCollections(locale as Locale),
-    getCategories(locale as Locale),
-    getServices(locale as Locale)
   ]);
 
   const bannerEnabled = siteBanner?.enabled !== false;
@@ -95,7 +86,7 @@ export default async function RootLayout({
             link={siteBanner?.link}
             linkLabel={siteBanner?.linkLabel}
           />
-          <Header brands={brands} collections={collections} categories={categories} services={services} />
+          <Header />
           <div id="main-content" className="flex-1 flex flex-col w-full relative">
             {children}
           </div>

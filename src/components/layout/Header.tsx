@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { Menu, Globe, Heart } from 'lucide-react';
@@ -14,6 +14,24 @@ import { Brand, EyewearCollection, Service } from '@/lib/cms/types';
 import { Category } from '@/lib/cms/categories';
 import { DESKTOP_NAV_LINKS } from '@/lib/navigation';
 
+interface NavData {
+  brands: Brand[];
+  collections: EyewearCollection[];
+  categories: Category[];
+  services: Service[];
+}
+
+async function fetchNavData(): Promise<NavData> {
+  const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3000';
+  const [brands, collections, categories, services] = await Promise.all([
+    fetch(`${CMS_URL}/api/brands?limit=100&depth=0`).then(r => r.json()).then(d => d.docs || []),
+    fetch(`${CMS_URL}/api/eyewear-collections?limit=100&depth=0`).then(r => r.json()).then(d => d.docs || []),
+    fetch(`${CMS_URL}/api/categories?limit=100&depth=0`).then(r => r.json()).then(d => d.docs || []),
+    fetch(`${CMS_URL}/api/services?limit=100&depth=0`).then(r => r.json()).then(d => d.docs || []),
+  ]);
+  return { brands, collections, categories, services };
+}
+
 interface HeaderProps {
   brands?: Brand[];
   collections?: EyewearCollection[];
@@ -21,7 +39,7 @@ interface HeaderProps {
   services?: Service[];
 }
 
-export function Header({ brands = [], collections = [], categories = [], services = [] }: HeaderProps) {
+export function Header({ brands: initialBrands = [], collections: initialCollections = [], categories: initialCategories = [], services: initialServices = [] }: HeaderProps) {
   const t = useTranslations('Navigation');
   const tHeader = useTranslations('Header');
   const locale = useLocale();
@@ -29,11 +47,22 @@ export function Header({ brands = [], collections = [], categories = [], service
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [navData, setNavData] = useState<NavData>({ brands: initialBrands, collections: initialCollections, categories: initialCategories, services: initialServices });
   
   const { activeItem: activeTab, handleMouseEnter, handleMouseLeave } = useHoverIntent<MegaMenuTab>(null, 300);
   
   const { scrollY } = useScroll({});
   const toggleLocale = locale === 'en' ? 'id' : 'en';
+
+  // Lazy-load nav data after mount (non-blocking)
+  useEffect(() => {
+    fetchNavData().then(setNavData).catch(() => {});
+  }, []);
+
+  const brands = navData.brands;
+  const collections = navData.collections;
+  const categories = navData.categories;
+  const services = navData.services;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     // Add hysteresis buffer: enter scrolled state > 50px, exit < 20px
