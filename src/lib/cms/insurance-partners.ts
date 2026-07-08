@@ -9,10 +9,8 @@ export async function getInsurancePartners(locale?: Locale): Promise<InsurancePa
     const endpoint = `/insurance-partners?where[active][equals]=true&sort=order&limit=50`;
     const response = await fetchCMS<CMSResponse<InsurancePartner>>(endpoint, { 
       locale,
-      next: { revalidate: 0 } // Force fresh data
+      next: { revalidate: 86400 }
     });
-    
-    console.log("Fetched insurance partners:", response);
 
     if (!response || !response.docs) {
       return [];

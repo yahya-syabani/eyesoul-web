@@ -154,7 +154,7 @@ export default async function ProductDetailPage({
                 {product.marketplaceLinks?.filter((l: any) => l.inStock).slice(0, 2).map((link: any) => (
                   <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer"
                     className="inline-flex items-center justify-center bg-neutral-900 text-white px-4 py-2 text-xs font-medium uppercase tracking-wide rounded-sm hover:bg-neutral-800 transition-colors">
-                    Buy {link.platform === 'tokopedia' ? 'Tokopedia' : link.platform === 'shopee' ? 'Shopee' : 'Now'}
+                    Buy {link.platform === 'tokopedia' ? 'Tokopedia' : link.platform === 'shopee' ? 'Shopee' : 'Ruparupa'}
                   </a>
                 ))}
                 {(!product.marketplaceLinks || product.marketplaceLinks.length === 0) && (

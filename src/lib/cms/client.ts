@@ -1,7 +1,8 @@
 import { Locale } from './types';
 
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3000';
-const CMS_API_KEY = process.env.CMS_API_KEY; // Only needed if endpoints are restricted
+const CMS_API_KEY = process.env.CMS_API_KEY;
+const FETCH_TIMEOUT_MS = 15000;
 
 interface FetchOptions extends RequestInit {
   locale?: Locale;
@@ -10,20 +11,15 @@ interface FetchOptions extends RequestInit {
 export async function fetchCMS<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
   const { locale = 'en', headers: customHeaders, ...restOptions } = options;
   
-  // Construct URL
   const url = new URL(`${CMS_URL}/api${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`);
   
-  // Append locale query param if not already present
-  // Note: Payload v3 localized docs often use ?locale=en
   if (!url.searchParams.has('locale')) {
     url.searchParams.append('locale', locale);
   }
-  // For deep relation population we usually use ?depth=1 or depth=2
   if (!url.searchParams.has('depth')) {
     url.searchParams.append('depth', '1');
   }
 
-  // Set up headers
   const headers = new Headers(customHeaders);
   if (!headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
@@ -33,11 +29,14 @@ export async function fetchCMS<T>(endpoint: string, options: FetchOptions = {}):
     headers.set('Authorization', `users API-Key ${CMS_API_KEY}`);
   }
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
   try {
     const response = await fetch(url.toString(), {
       ...restOptions,
       headers,
-      // For Next.js caching strategy (App Router)
+      signal: controller.signal,
       next: { revalidate: 60, ...options.next },
     });
 
@@ -48,8 +47,14 @@ export async function fetchCMS<T>(endpoint: string, options: FetchOptions = {}):
 
     const data = await response.json();
     return data as T;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.name === 'AbortError') {
+      console.error(`CMS fetch timeout after ${FETCH_TIMEOUT_MS}ms: ${endpoint}`);
+      throw new Error(`CMS request timed out: ${endpoint}`);
+    }
     console.error(`Failed to fetch CMS data from ${endpoint}:`, error);
     throw error;
+  } finally {
+    clearTimeout(timeout);
   }
 }

@@ -4,7 +4,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
 interface MarketplaceLink {
-  platform: "tokopedia" | "shopee";
+  platform: "tokopedia" | "shopee" | "ruparupa";
   url: string;
   inStock: boolean;
 }
@@ -42,7 +42,7 @@ export function BuyMarketplaceButton({ links, className = "" }: BuyMarketplaceBu
           rel="noopener noreferrer"
           className={buttonVariants({ variant: "default", className: "w-full uppercase font-medium tracking-wide" })}
         >
-          {t("buyNow")} {link.platform === "tokopedia" ? "Tokopedia" : "Shopee"}
+          {t("buyNow")} {link.platform === "tokopedia" ? "Tokopedia" : link.platform === "shopee" ? "Shopee" : "Ruparupa"}
         </a>
       ))}
     </div>

@@ -56,7 +56,7 @@ export interface Product {
     available?: boolean;
   };
   marketplaceLinks?: {
-    platform: 'tokopedia' | 'shopee';
+    platform: 'tokopedia' | 'shopee' | 'ruparupa';
     url: string;
     inStock: boolean;
   }[];

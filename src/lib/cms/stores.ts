@@ -9,16 +9,3 @@ export async function getStores(locale?: Locale): Promise<StoreLocation[]> {
   const response = await fetchCMS<CMSResponse<StoreLocation>>(endpoint, { locale });
   return response.docs || [];
 }
-
-/**
- * Fetches a single store by its ID.
- */
-export async function getStoreById(id: string | number, locale?: Locale): Promise<StoreLocation | null> {
-  const endpoint = `/store-locations/${id}`;
-  try {
-    const store = await fetchCMS<StoreLocation>(endpoint, { locale });
-    return store;
-  } catch {
-    return null;
-  }
-}

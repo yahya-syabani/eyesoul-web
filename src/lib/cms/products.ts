@@ -128,21 +128,3 @@ export async function getProductBySlug(slug: string, locale?: Locale): Promise<P
   }
   return null;
 }
-
-/**
- * Fetches products marked as new arrivals.
- */
-export async function getNewArrivals(locale?: Locale, limit = 4): Promise<Product[]> {
-  const endpoint = `/products?where[status.newArrival][equals]=true&limit=${limit}`;
-  const response = await fetchCMS<CMSResponse<Product>>(endpoint, { locale });
-  return response.docs;
-}
-
-/**
- * Fetches featured/bestseller products.
- */
-export async function getBestsellers(locale?: Locale, limit = 4): Promise<Product[]> {
-  const endpoint = `/products?where[status.bestseller][equals]=true&limit=${limit}`;
-  const response = await fetchCMS<CMSResponse<Product>>(endpoint, { locale });
-  return response.docs;
-}
