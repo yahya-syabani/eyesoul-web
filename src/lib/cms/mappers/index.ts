@@ -1,0 +1,10 @@
+export { mapProduct } from './product';
+export type { ProductViewModel } from './product';
+export { mapBrand } from './brand';
+export type { BrandViewModel } from './brand';
+export { mapCollection } from './collection';
+export type { CollectionViewModel } from './collection';
+export { mapArticle } from './article';
+export type { ArticleViewModel } from './article';
+export { mapService } from './service';
+export type { ServiceViewModel } from './service';

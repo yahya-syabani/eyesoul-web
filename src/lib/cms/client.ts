@@ -1,4 +1,5 @@
 import { Locale } from './types';
+import { draftMode } from 'next/headers';
 
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:3000';
 const CMS_API_KEY = process.env.CMS_API_KEY;
@@ -27,6 +28,17 @@ export async function fetchCMS<T>(endpoint: string, options: FetchOptions = {}):
   
   if (CMS_API_KEY) {
     headers.set('Authorization', `users API-Key ${CMS_API_KEY}`);
+  }
+
+  // Support draft/preview mode
+  try {
+    const { isEnabled } = await draftMode();
+    if (isEnabled) {
+      headers.set('X-Payload-Draft', 'true');
+      url.searchParams.set('draft', 'true');
+    }
+  } catch {
+    // draftMode() throws if not in a server context — safe to ignore
   }
 
   const controller = new AbortController();
